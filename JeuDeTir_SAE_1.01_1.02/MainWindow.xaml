@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JeuDeTir_SAE_1._01_1._02"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="Tortank Simulator" Height="450" Width="800">
+    <Canvas Background="White">
+        
+    </Canvas>
 </Window>

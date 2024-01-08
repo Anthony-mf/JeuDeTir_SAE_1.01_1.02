@@ -6,6 +6,31 @@
     <RootNamespace>JeuDeTir_SAE_1._01_1._02</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>favicon (1).ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="favicon (1).ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="img\8334151.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="img\kathryn-raccuglia-turtle-sprite.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="img\_232dcf25-bb75-4b67-8118-819ad263a1b4.jfif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>
