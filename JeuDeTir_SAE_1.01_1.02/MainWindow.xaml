@@ -13,5 +13,8 @@
     WindowState="Maximized"
     mc:Ignorable="d">
     <Canvas x:Name="monCanvas">
+        <Canvas.Background>
+            <ImageBrush ImageSource="/Arriereplan.jpg" />
+        </Canvas.Background>
     </Canvas>
 </Window>
