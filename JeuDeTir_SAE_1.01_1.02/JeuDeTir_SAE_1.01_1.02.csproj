@@ -9,11 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Arriereplan.jpg" />
+    <None Remove="ArrierePlan.jpg" />
+    <None Remove="FondMenu.png" />
+    <None Remove="logo.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Arriereplan.jpg" />
+    <Resource Include="FondMenu.png" />
+    <Resource Include="logo.png" />
   </ItemGroup>
 
   <ItemGroup>

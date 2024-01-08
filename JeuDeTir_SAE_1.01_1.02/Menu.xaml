@@ -5,11 +5,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:JeuDeTir_SAE_1._01_1._02"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Title="Menu" Height="500" Width="620" Icon="/logo.png">
-    <Canvas>
+    Title="Menu"
+    Width="620"
+    Height="500"
+    Icon="/logo.png"
+    mc:Ignorable="d">
+    <Canvas x:Name="MenuCanvas">
         <Canvas.Background>
-            <ImageBrush ImageSource="/FondMenu.png"/>
+            <ImageBrush ImageSource="img/statique/FondMenu.png"/>
         </Canvas.Background>
         <Label
             x:Name="Titre"
@@ -19,16 +22,18 @@
             VerticalAlignment="Top"
             Content="Veuillez choisir &#xD;&#xA;la difficulté :"
             FontSize="16"
-            FontWeight="Bold" >
+            FontWeight="Bold">
             <Label.Background>
-                <ImageBrush/>
+                <ImageBrush />
             </Label.Background>
         </Label>
         <ComboBox
             x:Name="CBdifficulté"
             Canvas.Top="52"
             Width="120"
-            SelectionChanged="CBdifficulté_SelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Top">
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            SelectionChanged="CBdifficulté_SelectionChanged">
             <ComboBoxItem Content="Facile" />
             <ComboBoxItem Content="Moyen" />
             <ComboBoxItem Content="Difficile" />
@@ -40,12 +45,26 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Content="JOUER"
+            FontFamily="Impact"
             FontSize="36"
-            FontWeight="Bold" FontFamily="Impact" />
-        <Label Content="Nombre de &#xD;&#xA;joueurs " Canvas.Left="480" Height="58" Width="116" FontWeight="Bold" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <ComboBox Canvas.Left="480" Canvas.Top="52" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <ComboBoxItem Content="Solo"/>
-            <ComboBoxItem Content="2 joueurs"/>
+            FontWeight="Bold" />
+        <Label
+            Canvas.Left="480"
+            Width="116"
+            Height="58"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Nombre de &#xD;&#xA;joueurs "
+            FontSize="16"
+            FontWeight="Bold" />
+        <ComboBox
+            Canvas.Left="480"
+            Canvas.Top="52"
+            Width="120"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top">
+            <ComboBoxItem Content="Solo" />
+            <ComboBoxItem Content="2 joueurs" />
         </ComboBox>
     </Canvas>
 </Window>

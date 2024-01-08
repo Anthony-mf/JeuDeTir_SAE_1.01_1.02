@@ -24,6 +24,14 @@ namespace JeuDeTir_SAE_1._01_1._02
         public MainWindow()
         {
             InitializeComponent();
+            ImageBrush fondWPF = new ImageBrush();
+            fondWPF.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondCanvas.jpg"));
+            monCanvas.Background = fondWPF;
+            ImageBrush fondMenu = new ImageBrush();
+            //fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondMenu.png"));
+            //MenuCanvas.Background = fondMenu;
+            Menu menu = new Menu();
+            menu.ShowDialog();
             CreationJoueur(1);
         }
 
