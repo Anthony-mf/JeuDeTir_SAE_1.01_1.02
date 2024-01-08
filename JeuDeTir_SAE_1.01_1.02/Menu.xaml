@@ -6,10 +6,10 @@
     xmlns:local="clr-namespace:JeuDeTir_SAE_1._01_1._02"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Menu" Height="500" Width="620">
+    Title="Menu" Height="500" Width="620" Icon="/logo.png">
     <Canvas>
         <Canvas.Background>
-            <ImageBrush ImageSource="/logo.png"/>
+            <ImageBrush ImageSource="/FondMenu.png"/>
         </Canvas.Background>
         <Label
             x:Name="Titre"
