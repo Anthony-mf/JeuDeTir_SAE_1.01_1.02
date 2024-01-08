@@ -16,5 +16,6 @@
         <Canvas.Background>
             <ImageBrush ImageSource="/Arriereplan.jpg" />
         </Canvas.Background>
+        
     </Canvas>
 </Window>
