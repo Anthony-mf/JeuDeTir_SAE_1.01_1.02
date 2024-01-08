@@ -34,7 +34,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             for (int i = 0; i < nbPlayer; i++)
             {
                 ImageBrush playerSkin = new ImageBrush();
-                playerSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/statique/tortue_statique.png"));
+                playerSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/tortue_statique.png"));
 
                 Rectangle newPlayer = new Rectangle
                 {
