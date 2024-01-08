@@ -14,7 +14,7 @@
     mc:Ignorable="d">
     <Canvas x:Name="monCanvas">
         <Canvas.Background>
-            <ImageBrush ImageSource="/Arriereplan.jpg" />
+            <ImageBrush ImageSource="/Arriereplan.jpg"/>
         </Canvas.Background>
 
     </Canvas>

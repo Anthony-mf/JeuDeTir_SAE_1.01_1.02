@@ -20,33 +20,33 @@ namespace JeuDeTir_SAE_1._01_1._02
     /// </summary>
     public partial class MainWindow : Window
     {
-        private int totalPlayer;
+        private int totalJoueur;
         public MainWindow()
         {
             InitializeComponent();
-            MakePlayer(1);
+            CreationJoueur(1);
         }
 
-        private void MakePlayer(int nbPlayer)
+        private void CreationJoueur(int nbJoueur)
         {
-            int left = 400;
-            totalPlayer = nbPlayer;
-            for (int i = 0; i < nbPlayer; i++)
+            int gauche = 400;
+            totalJoueur = nbJoueur;
+            for (int i = 0; i < nbJoueur; i++)
             {
-                ImageBrush playerSkin = new ImageBrush();
-                playerSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/tortue_statique.png"));
+                ImageBrush joueurSkin = new ImageBrush();
+                joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/tortue_statique.png"));
 
-                Rectangle newPlayer = new Rectangle
+                Rectangle nouveauJoueur = new Rectangle
                 {
-                    Tag = "player",
-                    Height = 65,
-                    Width = 55,
-                    Fill = playerSkin,
+                    Tag = "joueur",
+                    Height = 150,
+                    Width = 150,
+                    Fill = joueurSkin,
                 };
-                Canvas.SetTop(newPlayer, 350);
-                Canvas.SetLeft(newPlayer, left);
-                monCanvas.Children.Add(newPlayer);
-                left -= 100;
+                Canvas.SetTop(nouveauJoueur, 350);
+                Canvas.SetLeft(nouveauJoueur, gauche);
+                monCanvas.Children.Add(nouveauJoueur);
+                gauche -= 100;
             }
         }
     }
