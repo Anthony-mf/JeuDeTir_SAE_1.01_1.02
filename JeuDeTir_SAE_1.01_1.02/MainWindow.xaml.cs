@@ -20,11 +20,17 @@ namespace JeuDeTir_SAE_1._01_1._02
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool goLeft, goRight = false;
+        private bool goUp, goDown = false;
+        private int playerSpeed = 7;
+
+
         private int totalPlayer;
         public MainWindow()
         {
             InitializeComponent();
             MakePlayer(1);
+
         }
 
         private void MakePlayer(int nbPlayer)
@@ -47,6 +53,19 @@ namespace JeuDeTir_SAE_1._01_1._02
                 Canvas.SetLeft(newPlayer, left);
                 monCanvas.Children.Add(newPlayer);
                 left -= 100;
+            }
+        }
+
+        private void MovePlayer()
+        {
+            if (goLeft && Canvas.GetLeft(player) > 0)
+            {
+                Canvas.SetLeft(player, Canvas.GetLeft(player) - playerSpeed);
+            }
+            else if (goRight && Canvas.GetLeft(player) + player1.Width <
+            Application.Current.MainWindow.Width)
+            {
+                Canvas.SetLeft(player, Canvas.GetLeft(player) + playerSpeed);
             }
         }
     }
