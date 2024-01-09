@@ -73,7 +73,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             }
             else if (allerBas && Canvas.GetBottom(player) + player1.Width < Application.Current.MainWindow.Width)
             {
-                Canvas.SetLeft(player, Canvas.GetLeft(player) + playerSpeed);
+                Canvas.SetLeft(player, Canvas.GetLeft(joueur) + playerSpeed);
             }
 
         }
