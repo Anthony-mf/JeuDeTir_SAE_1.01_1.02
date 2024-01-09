@@ -24,22 +24,26 @@ namespace JeuDeTir_SAE_1._01_1._02
     {
         private bool allerGauche, allerDroite = false;
         private bool allerHaut, allerBas = false;
-        private int playerSpeed = 7;
-
+        private int vitesseJoueur = 7;
+        private Rect joueur;
+        private DispatcherTimer minuterie = new DispatcherTimer();
 
         private int totalJoueur;
         public MainWindow()
         {
             InitializeComponent();
-            ImageBrush fondWPF = new ImageBrush();
+            /*ImageBrush fondWPF = new ImageBrush();
             fondWPF.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondCanvas.jpg"));
             monCanvas.Background = fondWPF;
             ImageBrush fondMenu = new ImageBrush();
-            //fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondMenu.png"));
-            //MenuCanvas.Background = fondMenu;
+            fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondMenu.png"));
+            //MenuCanvas.Background = fondMenu;*/
             Menu menu = new Menu();
             menu.ShowDialog();
-            CreationJoueur(1);
+            minuterie.Tick += GameEngine;
+            // rafraissement toutes les 16 milliseconds
+            minuterie.Interval = TimeSpan.FromMilliseconds(16);
+            minuterie.Start();
         }
 
         private void CreationJoueur(int nbJoueur)
@@ -49,7 +53,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             for (int i = 0; i < nbJoueur; i++)
             {
                 ImageBrush joueurSkin = new ImageBrush();
-                joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/tortue_statique.png"));
+                joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/Statique/tortue_statique.png"));
                 Rectangle nouveauJoueur = new Rectangle
                 {
                     Tag = "joueur",
@@ -64,8 +68,15 @@ namespace JeuDeTir_SAE_1._01_1._02
 
             }
         }
-
-        private void MoveJoueur()
+        private void GameEngine(object sender, EventArgs e)
+        {
+            CreationJoueur(1);
+            foreach (Rectangle x in monCanvas.Children.OfType<Rectangle>())
+            {
+                //DeplacementsJoueur(x, joueur);
+            }
+        }
+        /*private void DeplacementsJoueur(Rectangle x, Rect joueur)
         {
             if (allerGauche && Canvas.GetLeft() > 0)
             {
@@ -82,9 +93,9 @@ namespace JeuDeTir_SAE_1._01_1._02
             else if (allerBas && Canvas.GetBottom(player) + player1.Width < Application.Current.MainWindow.Width)
             {
                 Canvas.SetLeft(player, Canvas.GetLeft(player) + playerSpeed);
-            }
+            }*/
 
-        }
+        //}
         private void CanvasToucheBaissée(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Left)
