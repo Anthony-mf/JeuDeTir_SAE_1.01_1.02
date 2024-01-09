@@ -24,26 +24,14 @@ namespace JeuDeTir_SAE_1._01_1._02
     {
         private bool allerGauche, allerDroite = false;
         private bool allerHaut, allerBas = false;
-        private int vitesseJoueur = 7;
-        private Rect joueur;
-        private DispatcherTimer minuterie = new DispatcherTimer();
+        private int playerSpeed = 7;
+
 
         private int totalJoueur;
         public MainWindow()
         {
             InitializeComponent();
-            /*ImageBrush fondWPF = new ImageBrush();
-            fondWPF.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondCanvas.jpg"));
-            monCanvas.Background = fondWPF;
-            ImageBrush fondMenu = new ImageBrush();
-            fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondMenu.png"));
-            //MenuCanvas.Background = fondMenu;*/
-            Menu menu = new Menu();
-            menu.ShowDialog();
-            minuterie.Tick += GameEngine;
-            // rafraissement toutes les 16 milliseconds
-            minuterie.Interval = TimeSpan.FromMilliseconds(16);
-            minuterie.Start();
+            CreationJoueur(1);
         }
 
         private void CreationJoueur(int nbJoueur)
@@ -53,7 +41,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             for (int i = 0; i < nbJoueur; i++)
             {
                 ImageBrush joueurSkin = new ImageBrush();
-                joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/Statique/tortue_statique.png"));
+                joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/tortue_statique.png"));
                 Rectangle nouveauJoueur = new Rectangle
                 {
                     Tag = "joueur",
@@ -68,17 +56,10 @@ namespace JeuDeTir_SAE_1._01_1._02
 
             }
         }
-        private void GameEngine(object sender, EventArgs e)
+
+        private void MouvementJoueur()
         {
-            CreationJoueur(1);
-            foreach (Rectangle x in monCanvas.Children.OfType<Rectangle>())
-            {
-                //DeplacementsJoueur(x, joueur);
-            }
-        }
-        /*private void DeplacementsJoueur(Rectangle x, Rect joueur)
-        {
-            if (allerGauche && Canvas.GetLeft() > 0)
+            if (allerGauche && Canvas.GetLeft(joueur) > 0)
             {
                 Canvas.SetLeft(joueur, Canvas.GetLeft(joueur) - playerSpeed);
             }
@@ -86,16 +67,18 @@ namespace JeuDeTir_SAE_1._01_1._02
             {
                 Canvas.SetLeft(player, Canvas.GetLeft(player) + playerSpeed);
             }
-            else if (allerHaut && Canvas.GetTop(player) + player1.Width < Application.Current.MainWindow.Width)
+            else if (allerHaut && Canvas.GetTop(joueur) > 0)
             {
-                Canvas.SetLeft(player, Canvas.GetLeft(player) + playerSpeed);
+                Canvas.SetTop(joueur, Canvas.GetTop(joueur) - playerSpeed);
             }
-            else if (allerBas && Canvas.GetBottom(player) + player1.Width < Application.Current.MainWindow.Width)
+            else if (allerBas && Canvas.GetTop(player) + player1.Height < Application.Current.MainWindow.Height)
             {
-                Canvas.SetLeft(player, Canvas.GetLeft(player) + playerSpeed);
-            }*/
+                Canvas.SetTop(player, Canvas.GetTop(player) + playerSpeed);
+            }
 
-        //}
+
+
+        }
         private void CanvasToucheBaissée(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Left)
@@ -113,6 +96,14 @@ namespace JeuDeTir_SAE_1._01_1._02
             if (e.Key == Key.Down)
             {
                 allerBas = true;
+            }
+        }
+
+        private void TestBallesAllié(Rectangle x)
+        {
+            if (x is  Rectangle && (string)x.Tag == "ballesJoueur")
+            {
+                Rect bullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
             }
         }
     }
