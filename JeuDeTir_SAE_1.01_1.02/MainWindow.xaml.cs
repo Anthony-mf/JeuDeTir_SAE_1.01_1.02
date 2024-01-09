@@ -22,11 +22,14 @@ namespace JeuDeTir_SAE_1._01_1._02
     /// </summary>
     public partial class MainWindow : Window
     {
+        //déplacement gauche/droite
         private bool allerGauche, allerDroite = false;
+        //déplacement haut/bas
         private bool allerHaut, allerBas = false;
-        private int vitesseJoueur = 25;
-        private Rect joueur;
-        private DispatcherTimer minuterie = new DispatcherTimer();
+        //vitesse du joueur
+        private int VitesseJoueur = 7;
+        // vitesse du tir du joueur
+        private int vitesseBallesJoueurs = 10;
 
         private int totalJoueur;
         public MainWindow()
@@ -68,6 +71,25 @@ namespace JeuDeTir_SAE_1._01_1._02
 
             }
         }
+        //---------------------------------------------------------------------------
+        //-----------------------------TIRS------------------------------------------
+
+        private void TestBallesAllié(Rectangle x)
+        {
+            if (x is Rectangle && (string)x.Tag == "ballesJoueur")
+            {
+                Canvas.SetTop(x, Canvas.GetTop(x) - vitesseBallesJoueurs);//monte
+                Canvas.SetTop(x, Canvas.GetTop(x) + vitesseBallesJoueurs);//descend
+                Canvas.SetLeft(x, Canvas.GetLeft(x) - vitesseBallesJoueurs);//gauche
+                Canvas.SetLeft(x, Canvas.GetLeft(x) + vitesseBallesJoueurs);//droite
+                //création rectangle pour une balle
+                Rect bullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+            }
+            if ((string)x.Tag == "ballesJoueurs" && )
+            {
+
+            }
+        }
         private void GameEngine(object sender, EventArgs e)
         {
             CreationJoueur(1);
@@ -76,6 +98,9 @@ namespace JeuDeTir_SAE_1._01_1._02
                 MouvementJoueur(x, joueur);
             }
         }
+        //------------------------------------------------------------------------
+        //-------------------------MOUVEMENTS-------------------------------------
+
         private void MouvementJoueur(Rectangle x, Rect joueur)
         {
             if (x is Rectangle && (string)x.Tag == "joueur" && allerGauche && Canvas.GetLeft(x) > 0)
@@ -96,20 +121,27 @@ namespace JeuDeTir_SAE_1._01_1._02
             }*/
         }
 
+//----------------------------------------------------------------------
+//--------------------------TOUCHES-------------------------------------
+
         private void CanvasToucheBaissée(object sender, KeyEventArgs e)
         {
+            //touche pour déplacement à gauche
             if (e.Key == Key.Left)
             {
                 allerGauche = true;
             }
+            //touche pour déplacement à droite
             if (e.Key == Key.Right)
             {
                 allerDroite = true;
             }
+            //touche pour déplacement en haut
             if (e.Key == Key.Up)
             {
                 allerHaut = true;
             }
+            //touche pour déplcement en bas
             if (e.Key == Key.Down)
             {
                 allerBas = true;
@@ -135,12 +167,27 @@ namespace JeuDeTir_SAE_1._01_1._02
             }
         }
 
-        private void TestBallesAllié(Rectangle x)
+        private void CanvasToucheLevées(object sender, KeyEventArgs e)
         {
-            if (x is  Rectangle && (string)x.Tag == "ballesJoueur")
+            //stop les déplacements si la touche est relevée
+            if (e.Key == Key.Up)
             {
-                Rect bullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+                allerGauche = false;
+            }
+            if (e.Key == Key.Up)
+            {
+                allerDroite = false;
+            }
+            if (e.Key == Key.Up)
+            {
+                allerHaut = false;
+            }
+            if (e.Key == Key.Up)
+            {
+                allerBas = false;
             }
         }
+
+
     }
 }
