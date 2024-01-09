@@ -30,9 +30,11 @@ namespace JeuDeTir_SAE_1._01_1._02
         private int VitesseJoueur = 7;
         // vitesse du tir du joueur
         private int vitesseBallesJoueurs = 10;
-
-
+        //liste des objets à suppr
+        private List<Rectangle> supprimerObjet = new List<Rectangle>();
+        //nb joueurs 
         private int totalJoueur;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -74,11 +76,12 @@ namespace JeuDeTir_SAE_1._01_1._02
                 Canvas.SetLeft(x, Canvas.GetLeft(x) - vitesseBallesJoueurs);//gauche
                 Canvas.SetLeft(x, Canvas.GetLeft(x) + vitesseBallesJoueurs);//droite
                 //création rectangle pour une balle
-                Rect bullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+                Rect balles = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
             }
-            if ((string)x.Tag == "ballesJoueurs" && )
+            //pour delete les balles jsp comment faire
+            if ((string)x.Tag == "ballesJoueursjjjjjj" )//&& )
             {
-
+                supprimerObjet.Add(x);
             }
         }
 
@@ -90,22 +93,22 @@ namespace JeuDeTir_SAE_1._01_1._02
             //gauche
             if (allerGauche && Canvas.GetLeft(joueur) > 0)
             {
-                Canvas.SetLeft(joueur, Canvas.GetLeft(joueur) - playerSpeed);
+                Canvas.SetLeft(joueur, Canvas.GetLeft(joueur) - VitesseJoueur);
             }
             //droite
-            else if (allerDroite && Canvas.GetLeft(joueur) + player1.Width < Application.Current.MainWindow.Width)
+            else if (allerDroite && Canvas.GetLeft(joueur) + joueur.Width < Application.Current.MainWindow.Width)
             {
-                Canvas.SetLeft(joueur, Canvas.GetLeft(player) + playerSpeed);
+                Canvas.SetLeft(joueur, Canvas.GetLeft(joueur) + VitesseJoueur);
             }
             //haut
             else if (allerHaut && Canvas.GetTop(joueur) > 0)
             {
-                Canvas.SetTop(joueur, Canvas.GetTop(joueur) - playerSpeed);
+                Canvas.SetTop(joueur, Canvas.GetTop(joueur) - VitesseJoueur);
             }
             //bas
-            else if (allerBas && Canvas.GetTop(joueur) + player1.Height < Application.Current.MainWindow.Height)
+            else if (allerBas && Canvas.GetTop(joueur) + joueur.Height < Application.Current.MainWindow.Height)
             {
-                Canvas.SetTop(joueur, Canvas.GetTop(joueur) + playerSpeed);
+                Canvas.SetTop(joueur, Canvas.GetTop(joueur) + VitesseJoueur);
             }
         }
 
@@ -133,6 +136,26 @@ namespace JeuDeTir_SAE_1._01_1._02
             if (e.Key == Key.Down)
             {
                 allerBas = true;
+            }
+            //touche tir
+            if (e.Key == Key.Space)
+            {
+                // clear des objets à suppr
+                supprimerObjet.Clear();
+                // création tir
+                Rectangle nouvelleBalle = new Rectangle
+                {
+                    Tag = "bulletPlayer",
+                    Height = 20,
+                    Width = 5,
+                    Fill = Brushes.White,
+                    Stroke = Brushes.Red
+                };
+                // on place le tir à l’endroit du joueur
+                Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) - nouvelleBalle.Height);
+                Canvas.SetLeft(nouvelleBalle, Canvas.GetLeft(joueur) + joueur.Width / 2);
+                // on place le tir dans le canvas
+                monCanvas.Children.Add(nouvelleBalle);
             }
         }
 
