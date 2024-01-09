@@ -22,9 +22,14 @@ namespace JeuDeTir_SAE_1._01_1._02
     /// </summary>
     public partial class MainWindow : Window
     {
+        //déplacement gauche/droite
         private bool allerGauche, allerDroite = false;
+        //déplacement haut/bas
         private bool allerHaut, allerBas = false;
-        private int playerSpeed = 7;
+        //vitesse du joueur
+        private int VitesseJoueur = 7;
+        // vitesse du tir du joueur
+        private int vitesseBallesJoueurs = 10;
 
 
         private int totalJoueur;
@@ -57,54 +62,101 @@ namespace JeuDeTir_SAE_1._01_1._02
             }
         }
 
+//---------------------------------------------------------------------------
+//-----------------------------TIRS------------------------------------------
+
+        private void TestBallesAllié(Rectangle x)
+        {
+            if (x is Rectangle && (string)x.Tag == "ballesJoueur")
+            {
+                Canvas.SetTop(x, Canvas.GetTop(x) - vitesseBallesJoueurs);//monte
+                Canvas.SetTop(x, Canvas.GetTop(x) + vitesseBallesJoueurs);//descend
+                Canvas.SetLeft(x, Canvas.GetLeft(x) - vitesseBallesJoueurs);//gauche
+                Canvas.SetLeft(x, Canvas.GetLeft(x) + vitesseBallesJoueurs);//droite
+                //création rectangle pour une balle
+                Rect bullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+            }
+            if ((string)x.Tag == "ballesJoueurs" && )
+            {
+
+            }
+        }
+
+//------------------------------------------------------------------------
+//-------------------------MOUVEMENTS-------------------------------------
+
         private void MouvementJoueur()
         {
+            //gauche
             if (allerGauche && Canvas.GetLeft(joueur) > 0)
             {
                 Canvas.SetLeft(joueur, Canvas.GetLeft(joueur) - playerSpeed);
             }
-            else if (allerDroite && Canvas.GetLeft(player) + player1.Width < Application.Current.MainWindow.Width)
+            //droite
+            else if (allerDroite && Canvas.GetLeft(joueur) + player1.Width < Application.Current.MainWindow.Width)
             {
-                Canvas.SetLeft(player, Canvas.GetLeft(player) + playerSpeed);
+                Canvas.SetLeft(joueur, Canvas.GetLeft(player) + playerSpeed);
             }
+            //haut
             else if (allerHaut && Canvas.GetTop(joueur) > 0)
             {
                 Canvas.SetTop(joueur, Canvas.GetTop(joueur) - playerSpeed);
             }
-            else if (allerBas && Canvas.GetTop(player) + player1.Height < Application.Current.MainWindow.Height)
+            //bas
+            else if (allerBas && Canvas.GetTop(joueur) + player1.Height < Application.Current.MainWindow.Height)
             {
-                Canvas.SetTop(player, Canvas.GetTop(player) + playerSpeed);
+                Canvas.SetTop(joueur, Canvas.GetTop(joueur) + playerSpeed);
             }
-
-
-
         }
+
+//----------------------------------------------------------------------
+//--------------------------TOUCHES-------------------------------------
+
         private void CanvasToucheBaissée(object sender, KeyEventArgs e)
         {
+            //touche pour déplacement à gauche
             if (e.Key == Key.Left)
             {
                 allerGauche = true;
             }
+            //touche pour déplacement à droite
             if (e.Key == Key.Right)
             {
                 allerDroite = true;
             }
+            //touche pour déplacement en haut
             if (e.Key == Key.Up)
             {
                 allerHaut = true;
             }
+            //touche pour déplcement en bas
             if (e.Key == Key.Down)
             {
                 allerBas = true;
             }
         }
 
-        private void TestBallesAllié(Rectangle x)
+        private void CanvasToucheLevées(object sender, KeyEventArgs e)
         {
-            if (x is  Rectangle && (string)x.Tag == "ballesJoueur")
+            //stop les déplacements si la touche est relevée
+            if (e.Key == Key.Up)
             {
-                Rect bullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+                allerGauche = false;
+            }
+            if (e.Key == Key.Up)
+            {
+                allerDroite = false;
+            }
+            if (e.Key == Key.Up)
+            {
+                allerHaut = false;
+            }
+            if (e.Key == Key.Up)
+            {
+                allerBas = false;
             }
         }
+
+
     }
 }
