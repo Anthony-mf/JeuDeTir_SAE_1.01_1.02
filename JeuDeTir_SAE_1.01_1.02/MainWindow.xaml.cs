@@ -57,9 +57,9 @@ namespace JeuDeTir_SAE_1._01_1._02
             }
         }
 
-        private void MoveJoueur()
+        private void MouvementJoueur()
         {
-            if (allerGauche && Canvas.GetLeft() > 0)
+            if (allerGauche && Canvas.GetLeft(joueur) > 0)
             {
                 Canvas.SetLeft(joueur, Canvas.GetLeft(joueur) - playerSpeed);
             }
@@ -67,14 +67,16 @@ namespace JeuDeTir_SAE_1._01_1._02
             {
                 Canvas.SetLeft(player, Canvas.GetLeft(player) + playerSpeed);
             }
-            else if (allerHaut && Canvas.GetTop(player) + player1.Width < Application.Current.MainWindow.Width)
+            else if (allerHaut && Canvas.GetTop(joueur) > 0)
             {
-                Canvas.SetLeft(player, Canvas.GetLeft(player) + playerSpeed);
+                Canvas.SetTop(joueur, Canvas.GetTop(joueur) - playerSpeed);
             }
-            else if (allerBas && Canvas.GetBottom(player) + player1.Width < Application.Current.MainWindow.Width)
+            else if (allerBas && Canvas.GetTop(player) + player1.Height < Application.Current.MainWindow.Height)
             {
-                Canvas.SetLeft(player, Canvas.GetLeft(joueur) + playerSpeed);
+                Canvas.SetTop(player, Canvas.GetTop(player) + playerSpeed);
             }
+
+
 
         }
         private void CanvasToucheBaissée(object sender, KeyEventArgs e)
@@ -94,6 +96,14 @@ namespace JeuDeTir_SAE_1._01_1._02
             if (e.Key == Key.Down)
             {
                 allerBas = true;
+            }
+        }
+
+        private void TestBallesAllié(Rectangle x)
+        {
+            if (x is  Rectangle && (string)x.Tag == "ballesJoueur")
+            {
+                Rect bullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
             }
         }
     }
