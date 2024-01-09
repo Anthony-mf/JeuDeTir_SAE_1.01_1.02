@@ -27,11 +27,13 @@ namespace JeuDeTir_SAE_1._01_1._02
         //déplacement haut/bas
         private bool allerHaut, allerBas = false;
         //vitesse du joueur
-        private int VitesseJoueur = 7;
+        private int vitesseJoueur = 7;
         // vitesse du tir du joueur
         private int vitesseBallesJoueurs = 10;
-
+        private DispatcherTimer minuterie = new DispatcherTimer();
         private int totalJoueur;
+        private Rect joueur;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -60,11 +62,11 @@ namespace JeuDeTir_SAE_1._01_1._02
                 Rectangle nouveauJoueur = new Rectangle
                 {
                     Tag = "joueur",
-                    Height = 150,
-                    Width = 150,
+                    Height = 15,
+                    Width = 15,
                     Fill = Brushes.Red,
                 };
-                Canvas.SetTop(nouveauJoueur, 350);
+                Canvas.SetTop(nouveauJoueur, 100);
                 Canvas.SetLeft(nouveauJoueur, gauche);
                 monCanvas.Children.Add(nouveauJoueur);
                 gauche -= 100;
@@ -85,7 +87,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                 //création rectangle pour une balle
                 Rect bullet = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
             }
-            if ((string)x.Tag == "ballesJoueurs" && )
+            if ((string)x.Tag == "ballesJoueurs")
             {
 
             }
@@ -111,14 +113,14 @@ namespace JeuDeTir_SAE_1._01_1._02
             {
                 Canvas.SetLeft(x, Canvas.GetLeft(x) + vitesseJoueur);
             }
-            /*if (x is Rectangle && (string)x.Tag == "joueur" && allerHaut && Canvas.GetTop(x) > 0)
+            if (x is Rectangle && (string)x.Tag == "joueur" && allerHaut && Canvas.GetTop(x) > 0)
             {
                 Canvas.SetTop(x, Canvas.GetTop(x) - vitesseJoueur);
             }
             else if (x is Rectangle && (string)x.Tag == "joueur" && allerBas && Canvas.GetTop(x) + joueur.Height < Application.Current.MainWindow.Height)
             {
                 Canvas.SetTop(x, Canvas.GetTop(x) + vitesseJoueur);
-            }*/
+            }
         }
 
 //----------------------------------------------------------------------
