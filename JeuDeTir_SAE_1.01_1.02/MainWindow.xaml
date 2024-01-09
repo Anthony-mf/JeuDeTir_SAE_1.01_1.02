@@ -8,10 +8,14 @@
     Title="Tortank Simulator"
     Width="800"
     Height="450"
-    ResizeMode="CanResize"
+    ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner"
     WindowState="Maximized"
-    mc:Ignorable="d">
-    <Canvas x:Name="monCanvas">
+    mc:Ignorable="d"
+    FocusManager.FocusedElement="{Binding ElementName=monCanvas}">
+    <Canvas x:Name="monCanvas"
+            Focusable="True"
+            KeyDown="CanvasToucheBaissée"
+            KeyUp="CanvasToucheRelachée">
     </Canvas>
 </Window>
