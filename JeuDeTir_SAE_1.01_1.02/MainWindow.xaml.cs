@@ -34,6 +34,8 @@ namespace JeuDeTir_SAE_1._01_1._02
         private List<Rectangle> supprimerObjet = new List<Rectangle>();
         //nb joueurs 
         private int totalJoueur;
+        private DispatcherTimer minuterie = new DispatcherTimer();
+        private UIElement joueur;
 
         public MainWindow()
         {
@@ -43,7 +45,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             monCanvas.Background = fondWPF;
             ImageBrush fondMenu = new ImageBrush();
             fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondMenu.png"));
-            //MenuCanvas.Background = fondMenu;*/
+            //MenuCanvas.Background = fondMenu;
             Menu menu = new Menu();
             menu.ShowDialog();
             minuterie.Tick += GameEngine;
@@ -99,31 +101,32 @@ namespace JeuDeTir_SAE_1._01_1._02
             CreationJoueur(1);
             foreach (Rectangle x in monCanvas.Children.OfType<Rectangle>())
             {
-                MouvementJoueur(x, joueur);
+                MouvementJoueur(x);
+                
             }
         }
         //------------------------------------------------------------------------
         //-------------------------MOUVEMENTS-------------------------------------
 
-        private void MouvementJoueur(Rectangle x, Rect joueur)
+        private void MouvementJoueur(Rectangle x)
         {
             if (x is Rectangle && (string)x.Tag == "joueur" && allerGauche && Canvas.GetLeft(x) > 0)
             {
-                Canvas.SetLeft(joueur, Canvas.GetLeft(joueur) - playerSpeed);
+                Canvas.SetLeft(x, Canvas.GetLeft(x) - VitesseJoueur);
             }
             //droite
-            else if (allerDroite && Canvas.GetLeft(joueur) + player1.Width < Application.Current.MainWindow.Width)
+            else if (allerDroite && Canvas.GetLeft(x) + x.Width < Application.Current.MainWindow.Width)
             {
-                Canvas.SetLeft(joueur, Canvas.GetLeft(player) + playerSpeed);
+                Canvas.SetLeft(x, Canvas.GetLeft(x) + VitesseJoueur);
             }
             if (x is Rectangle && (string)x.Tag == "joueur" && allerHaut && Canvas.GetTop(x) > 0)
             {
-                Canvas.SetTop(joueur, Canvas.GetTop(joueur) - playerSpeed);
+                Canvas.SetTop(x, Canvas.GetTop(x) - VitesseJoueur);
             }
             //bas
-            else if (allerBas && Canvas.GetTop(joueur) + player1.Height < Application.Current.MainWindow.Height)
+            else if (allerBas && Canvas.GetTop(x) + x.Height < Application.Current.MainWindow.Height)
             {
-                Canvas.SetTop(joueur, Canvas.GetTop(joueur) + playerSpeed);
+                Canvas.SetTop(x, Canvas.GetTop(x) + VitesseJoueur);
             }
         }
 
@@ -168,7 +171,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                 };
                 // on place le tir à l’endroit du joueur
                 Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) - nouvelleBalle.Height);
-                Canvas.SetLeft(nouvelleBalle, Canvas.GetLeft(joueur) + joueur.Width / 2);
+                Canvas.SetLeft(nouvelleBalle, Canvas.GetLeft(joueur) + 75);
                 // on place le tir dans le canvas
                 monCanvas.Children.Add(nouvelleBalle);
             }
