@@ -176,7 +176,7 @@ namespace JeuDeTir_SAE_1._01_1._02
 
             foreach (Rectangle x in monCanvas.Children.OfType<Rectangle>())
             {
-                TestBallesAllié(x);
+                DeplacementsEtCollisionBalleJoueur(x);
               
             }
             SupprimerObjetASupprimer();
