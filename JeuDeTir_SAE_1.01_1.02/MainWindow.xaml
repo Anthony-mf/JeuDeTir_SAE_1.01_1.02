@@ -9,8 +9,6 @@
     Width="800"
     Height="450"
     ResizeMode="NoResize"
-    WindowStartupLocation="CenterOwner"
-    WindowState="Maximized"
     mc:Ignorable="d"
     FocusManager.FocusedElement="{Binding ElementName=monCanvas}">
     <Canvas x:Name="monCanvas"
