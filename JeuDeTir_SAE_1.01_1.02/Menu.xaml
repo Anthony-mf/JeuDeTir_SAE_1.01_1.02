@@ -8,8 +8,10 @@
     Title="Menu"
     Width="620"
     Height="500"
-    Icon="/logo.png"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Icon="/logo.png">
+    <Window.Background>
+        <ImageBrush ImageSource="/FondMenu.png"/>
+    </Window.Background>
     <Canvas x:Name="MenuCanvas">
         <Canvas.Background>
             <ImageBrush ImageSource="/FondMenu.png" />

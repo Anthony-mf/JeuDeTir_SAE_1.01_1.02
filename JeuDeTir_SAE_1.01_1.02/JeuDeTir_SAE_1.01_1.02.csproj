@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <None Remove="Arriereplan.jpg" />
-    <None Remove="FondMenu.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,12 +25,13 @@
     <None Update="img\kathryn-raccuglia-turtle-sprite.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="images\Statique\logo.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="img\_232dcf25-bb75-4b67-8118-819ad263a1b4.jfif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="img\" />
   </ItemGroup>
 
 </Project>

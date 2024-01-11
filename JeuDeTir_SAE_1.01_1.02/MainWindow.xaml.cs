@@ -33,8 +33,10 @@ namespace JeuDeTir_SAE_1._01_1._02
         private int vitesseBallesJoueurs = 10;
         //liste des objets à suppr
         private List<Rectangle> supprimerObjet = new List<Rectangle>();
-        //nb joueurs 
-        private int totalJoueur;
+        //Liste des images pour le joueur
+        private List<Image> animationJoueur = new List<Image>();
+        //Liste des images pour les ennemis
+        private List<Image> animationEnnemis = new List<Image>();
         //minuterie
         private DispatcherTimer minuterie = new DispatcherTimer();
         //direction
@@ -43,6 +45,9 @@ namespace JeuDeTir_SAE_1._01_1._02
 
         public MainWindow()
         {
+            #if DEBUG
+                Console.WriteLine(allerDroite);
+            #endif
             InitializeComponent();
             //montrer le menu
             Menu menu = new Menu();
@@ -62,23 +67,72 @@ namespace JeuDeTir_SAE_1._01_1._02
             joueur.Fill = joueurSkin;
             //MenuCanvas.Background = fondMenu;
             //Menu menu = new Menu();
-            //menu.ShowDialog();
-            
-            
-             minuterie.Tick += GameEngine;
-             // rafraissement toutes les 16 milliseconds
-             minuterie.Interval = TimeSpan.FromMilliseconds(16);
-             minuterie.Start();
+            //menu.ShowDialog();*/
+            minuterie.Tick += GameEngine;
+            // rafraissement toutes les 16 milliseconds
+            minuterie.Interval = TimeSpan.FromMilliseconds(16);
+            minuterie.Start();
+            CreationJoueur(1);
+            CreationEnnemis(30);
+        }
+
+        //----------------------------------------------------------------------
+        //---------------------------JOUEUR-------------------------------------
+
+        private void CreationJoueur(int nbJoueur)
+        {
+            int gauche = 400;
+            for (int i = 0; i < nbJoueur; i++)
+            {
+                ImageBrush joueurSkin = new ImageBrush();
+                //joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/tortue_statique.png"));
+                Rectangle nouveauJoueur = new Rectangle
+                {
+                    Tag = "joueur",
+                    Height = 15,
+                    Width = 15,
+                    Fill = Brushes.Red,
+                };
+                Canvas.SetTop(nouveauJoueur, 100);
+                Canvas.SetLeft(nouveauJoueur, gauche);
+                monCanvas.Children.Add(nouveauJoueur);
+                gauche -= 100;
                 
-            
-            
-            
+            }
+        }
+
+
+        //----------------------------------------------------------------------
+        //--------------------------ENNEMIS-------------------------------------
+
+        private void CreationEnnemis(int nbEnnemis)
+        {
+            Random rdm1 = new Random();
+            Random rdm2 = new Random();
+            double x, y;
+            for (int i = 0; i < nbEnnemis; i++)
+            {
+                x = rdm1.Next();
+                y = rdm2.Next();
+                ImageBrush ennemiSkin = new ImageBrush();
+                //joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/tortue_statique.png"));
+                Rectangle nouvelEnnemi = new Rectangle
+                {
+                    Tag = "ennemi",
+                    Height = 15,
+                    Width = 15,
+                    Fill = Brushes.Blue,
+                };
+                Canvas.SetTop(nouvelEnnemi, x);
+                Canvas.SetLeft(nouvelEnnemi, y);
+                monCanvas.Children.Add(nouvelEnnemi);
+            }
         }
 
         //---------------------------------------------------------------------------
         //-----------------------------TIRS------------------------------------------
 
-        private void TestBallesAllié(Rectangle x)
+        private void DeplacementsEtCollisionBalleJoueur(Rectangle x)
         {
             if (x is Rectangle && (string)x.Tag == "ballesJoueurs_H")
             {
@@ -114,7 +168,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             }
 
         }
-        private void GameEngine(object sender, EventArgs e)
+                private void GameEngine(object sender, EventArgs e)
         {
             Rect joueur1 = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur),
             joueur.Width, joueur.Height);
@@ -175,8 +229,8 @@ namespace JeuDeTir_SAE_1._01_1._02
             }
         }
 
-//----------------------------------------------------------------------
-//--------------------------TOUCHES-------------------------------------
+        //----------------------------------------------------------------------
+        //--------------------------TOUCHES-------------------------------------
 
         private void CanvasToucheBaissée(object sender, KeyEventArgs e)
         {
@@ -203,7 +257,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             //touche tir
             if (e.Key == Key.Space)
             {
-                // clear des objets à suppr
+                // on vide la liste des items
                 supprimerObjet.Clear();
                
 
@@ -274,13 +328,15 @@ namespace JeuDeTir_SAE_1._01_1._02
 
             }
         }
-        private void CanvasToucheRelachée(object sender, KeyEventArgs e)
+
+        private void CanvasToucheLevées(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Left)
+            //stop les déplacements si la touche est relevée
+            if (e.Key == Key.Up)
             {
                 allerGauche = false;
             }
-            if (e.Key == Key.Right)
+            if (e.Key == Key.Up)
             {
                 allerDroite = false;
             }
@@ -288,12 +344,10 @@ namespace JeuDeTir_SAE_1._01_1._02
             {
                 allerHaut = false;
             }
-            if (e.Key == Key.Down)
+            if (e.Key == Key.Up)
             {
                 allerBas = false;
             }
         }
-
-
     }
 }
