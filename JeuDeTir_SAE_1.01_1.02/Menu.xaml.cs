@@ -22,11 +22,14 @@ namespace JeuDeTir_SAE_1._01_1._02
     {
         public Menu()
         {
+            
         }
 
         private void butJouer_Click(object sender, RoutedEventArgs e)
         {
-            
+            this.DialogResult = true;
+            //Menu.Close();
+
         }
 
         private void CBdifficulté_SelectionChanged(object sender, SelectionChangedEventArgs e)

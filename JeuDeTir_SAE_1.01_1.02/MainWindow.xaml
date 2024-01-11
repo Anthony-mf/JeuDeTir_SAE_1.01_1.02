@@ -19,5 +19,11 @@
         <Canvas.Background>
             <ImageBrush ImageSource="/FondCanvas.jpg" />
         </Canvas.Background>
+        <Rectangle 
+            Name="joueur" 
+            Height="50" 
+            Canvas.Left="154" 
+            Canvas.Top="147" 
+            Width="50"/>
     </Canvas>
 </Window>
