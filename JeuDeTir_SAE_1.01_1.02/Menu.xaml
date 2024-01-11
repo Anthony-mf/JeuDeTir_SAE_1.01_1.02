@@ -13,9 +13,9 @@
     <Window.Background>
         <ImageBrush ImageSource="/FondMenu.png" />
     </Window.Background>
-    <Canvas x:Name="MenuCanvas">
+    <Canvas x:Name="menuCanvas">
         <Label
-            x:Name="Titre"
+            x:Name="labDifficulte"
             Width="137"
             Height="52"
             HorizontalAlignment="Center"
@@ -28,7 +28,7 @@
             </Label.Background>
         </Label>
         <ComboBox
-            x:Name="CBdifficulté"
+            x:Name="CBdifficulte"
             Canvas.Top="52"
             Width="120"
             HorizontalAlignment="Left"
@@ -39,32 +39,16 @@
             <ComboBoxItem Content="Difficile" />
         </ComboBox>
         <Button
+            x:Name="butJouer"
             Canvas.Left="200"
             Width="200"
             Height="54"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
+            Click="butJouer_Click"
             Content="JOUER"
             FontFamily="Impact"
             FontSize="36"
             FontWeight="Bold" />
-        <Label
-            Canvas.Left="480"
-            Width="116"
-            Height="58"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Content="Nombre de &#xD;&#xA;joueurs "
-            FontSize="16"
-            FontWeight="Bold" />
-        <ComboBox
-            Canvas.Left="480"
-            Canvas.Top="52"
-            Width="120"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top">
-            <ComboBoxItem Content="Solo" />
-            <ComboBoxItem Content="2 joueurs" />
-        </ComboBox>
     </Canvas>
 </Window>

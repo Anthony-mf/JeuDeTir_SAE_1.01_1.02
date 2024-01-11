@@ -50,63 +50,33 @@ namespace JeuDeTir_SAE_1._01_1._02
             Menu menu = new Menu();
             menu.ShowDialog();
             //menu.Owner = this;
-            //if (menu.DialogResult == false)
-                //Application.Current.Shutdown();
-
+            if (menu.DialogResult == false)
+                Application.Current.Shutdown();
+            else
+                menu.Close();
             monCanvas.Focus();
+            // on affecte le skin du MainWindow
             ImageBrush fondWPF = new ImageBrush();
-            fondWPF.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/statique/FondCanvas.jpg"));
+            fondWPF.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondCanvas.jpg"));
             monCanvas.Background = fondWPF;
-            ImageBrush fondMenu = new ImageBrush();
-            fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/statique/FondMenu.png"));
+            // on affecte le skin du joueur
             ImageBrush joueurSkin = new ImageBrush();
-            joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/Statique/tortue_statique.png"));
+            joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/tortue_statique.png"));
             joueur.Fill = joueurSkin;
-            //MenuCanvas.Background = fondMenu;
-            //Menu menu = new Menu();
-            //menu.ShowDialog();
-            minuterie.Tick += GameEngine;
+            minuterie.Tick += MoteurDeJeu;
             // rafraissement toutes les 16 milliseconds
             minuterie.Interval = TimeSpan.FromMilliseconds(16);
             minuterie.Start();
-            CreationJoueur(1);
             CreationEnnemis(30);
         }
-
-        //----------------------------------------------------------------------
-        //---------------------------JOUEUR-------------------------------------
-
-        private void CreationJoueur(int nbJoueur)
-        {
-            Random rdm1 = new Random();
-            Random rdm2 = new Random();
-            int x, y;
-            int largeurMax = (int)Application.Current.MainWindow.Width;
-            int hauteurMax = (int)Application.Current.MainWindow.Height;
-            for (int i = 0; i < nbJoueur; i++)
-            {
-                x = rdm1.Next(hauteurMax - 500, hauteurMax - 300);
-                y = rdm2.Next(largeurMax - 100, largeurMax - 50);
-                ImageBrush joueurSkin = new ImageBrush();
-                joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/tortue_statique.png"));
-                Rectangle nouveauJoueur = new Rectangle
-                {
-                    Tag = "joueur",
-                    Height = 35,
-                    Width = 35,
-                    Fill = joueurSkin,
-                };
-                Canvas.SetTop(nouveauJoueur, x);
-                Canvas.SetLeft(nouveauJoueur, y);
-                monCanvas.Children.Add(nouveauJoueur);
-            }
-        }
-
         //----------------------------------------------------------------------
         //--------------------------ENNEMIS-------------------------------------
 
         private void CreationEnnemis(int nbEnnemis)
         {
+            // on affecte le skin des ennemis
+            ImageBrush ennemiSkin = new ImageBrush();
+            ennemiSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/escargot_statique.png"));
             Random rdm1 = new Random();
             Random rdm2 = new Random();
             double x, y;
@@ -116,8 +86,6 @@ namespace JeuDeTir_SAE_1._01_1._02
             {
                 x = rdm1.Next(100, 700);
                 y = rdm2.Next(100, 1500);
-                ImageBrush ennemiSkin = new ImageBrush();
-                ennemiSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/escargot_statique.png"));
                 Rectangle nouvelEnnemi = new Rectangle
                 {
                     Tag = "ennemi",
@@ -141,36 +109,51 @@ namespace JeuDeTir_SAE_1._01_1._02
                 Canvas.SetTop(x, Canvas.GetTop(x) - vitesseBallesJoueurs);//monte
                 //création rectangle pour une balle
                 Rect balles = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-                //pour delete les balles jsp comment faire
-               
+                if (Canvas.GetTop(x) < 0)
+                {
+                    // si c’est le cas on l’ajoute à la liste des éléments à supprimer
+                    supprimerObjet.Add(x);
+                }
+
             }
             if (x is Rectangle && (string)x.Tag == "ballesJoueurs_B")
             {
                 Canvas.SetTop(x, Canvas.GetTop(x) + vitesseBallesJoueurs);//descend
                 //création rectangle pour une balle
                 Rect balles = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-                //pour delete les balles jsp comment faire
-           
+                if (Canvas.GetTop(x) > 800)
+                {
+                    // si c’est le cas on l’ajoute à la liste des éléments à supprimer
+                    supprimerObjet.Add(x);
+                }
+
             }
             if (x is Rectangle && (string)x.Tag == "ballesJoueurs_D")
             {
                 Canvas.SetLeft(x, Canvas.GetLeft(x) + vitesseBallesJoueurs);//droite
                 //création rectangle pour une balle
                 Rect balles = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-                //pour delete les balles jsp comment faire
-               
+                if (Canvas.GetLeft(x) > 1600)
+                {
+                    // si c’est le cas on l’ajoute à la liste des éléments à supprimer
+                    supprimerObjet.Add(x);
+                }
+
             }
             if (x is Rectangle && (string)x.Tag == "ballesJoueurs_G")
             {
                 Canvas.SetLeft(x, Canvas.GetLeft(x) - vitesseBallesJoueurs);//gauche
                 //création rectangle pour une balle
                 Rect balles = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-                //pour delete les balles jsp comment faire
-             
+                if (Canvas.GetLeft(x) < 0)
+                {
+                    // si c’est le cas on l’ajoute à la liste des éléments à supprimer
+                    supprimerObjet.Add(x);
+                }
             }
 
         }
-                private void GameEngine(object sender, EventArgs e)
+        private void MoteurDeJeu(object sender, EventArgs e)
         {
             Rect joueur1 = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur),
             joueur.Width, joueur.Height);
@@ -179,15 +162,15 @@ namespace JeuDeTir_SAE_1._01_1._02
             foreach (Rectangle x in monCanvas.Children.OfType<Rectangle>())
             {
                 DeplacementsEtCollisionBalleJoueur(x);
-              
+
             }
-            SupprimerObjetASupprimer();
+            SupprimerObjet();
         }
 
-        private void SupprimerObjetASupprimer()
+        private void SupprimerObjet()
         {
             foreach (Rectangle y in supprimerObjet)
-            {  
+            {
                 monCanvas.Children.Remove(y);
             }
         }
@@ -197,7 +180,6 @@ namespace JeuDeTir_SAE_1._01_1._02
 
         private void MouvementJoueur()
         {
-           
             if (allerGauche && Canvas.GetLeft(joueur) > 0)
             {
                 direction = "G";
@@ -206,7 +188,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                 joueur.RenderTransform = new RotateTransform(angle, joueur.Width / 2, joueur.Height / 2);
             }
             //Droite
-            else if (allerDroite && (string)x.Tag == "joueur" && Canvas.GetLeft(x) + x.Width < Application.Current.MainWindow.Width)
+            else if (allerDroite && Canvas.GetLeft(joueur) + joueur.Width < Application.Current.MainWindow.Width)
             {
                 direction = "D";
                 int angle = 90;
@@ -222,7 +204,7 @@ namespace JeuDeTir_SAE_1._01_1._02
 
             }
             //Bas
-            else if (allerBas && (string)x.Tag == "joueur" && Canvas.GetTop(x) + x.Height < Application.Current.MainWindow.Height)
+            else if (allerBas && Canvas.GetTop(joueur) + joueur.Height < Application.Current.MainWindow.Height)
             {
                 direction="B";
                 int angle = -180;
@@ -261,17 +243,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             {
                 // on vide la liste des items
                 supprimerObjet.Clear();
-                // on affecte le skin de la munitions
-                ImageBrush munitionSkin = new ImageBrush();
-                munitionSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/Munitions.jpg"));
                 // création un nouveau tir
-                Rectangle nouvelleBalle = new Rectangle
-                {
-                    Tag = "balleJoueur", //permet de tagger les rectangles
-                    Height = 20,
-                    Width = 5,
-                };
-
                 if (direction == "G")
                 {
                     Rectangle nouvelleBalle = new Rectangle
@@ -280,7 +252,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                         Height = 5,
                         Width = 20,
                         Fill = Brushes.White,
-                        Stroke = Brushes.Red
+                        Stroke = Brushes.Gray
                     };
                     // on place le tir à l’endroit du joueur
                     Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) - nouvelleBalle.Height);
@@ -296,7 +268,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                         Height = 5,
                         Width = 20,
                         Fill = Brushes.White,
-                        Stroke = Brushes.Red
+                        Stroke = Brushes.Gray
                     };
                     // on place le tir à l’endroit du joueur
                     Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) - nouvelleBalle.Height);
@@ -312,7 +284,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                         Height = 20,
                         Width = 5,
                         Fill = Brushes.White,
-                        Stroke = Brushes.Red
+                        Stroke = Brushes.Gray
                     };
                     // on place le tir à l’endroit du joueur
                     Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) - nouvelleBalle.Height);
@@ -328,7 +300,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                         Height = 20,
                         Width = 5,
                         Fill = Brushes.White,
-                        Stroke = Brushes.Red
+                        Stroke = Brushes.Gray
                     };
                     // on place le tir à l’endroit du joueur
                     Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) - nouvelleBalle.Height);
