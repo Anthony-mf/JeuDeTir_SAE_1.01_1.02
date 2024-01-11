@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.CompilerServices;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -53,7 +53,8 @@ namespace JeuDeTir_SAE_1._01_1._02
             fondWPF.ImageSource = new BitmapImage(new Uri("img\\statique\\FondCanvas.jpg"));
             monCanvas.Background = fondWPF;
             ImageBrush fondMenu = new ImageBrush();
-            fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img\\statique\\FondMenu.png"));
+            fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/statique/FondMenu.png"));
+
             //MenuCanvas.Background = fondMenu;
             //Menu menu = new Menu();
             //menu.ShowDialog();*/
@@ -86,7 +87,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                 Canvas.SetLeft(nouveauJoueur, gauche);
                 monCanvas.Children.Add(nouveauJoueur);
                 gauche -= 100;
-
+                
             }
         }
 
@@ -139,6 +140,7 @@ namespace JeuDeTir_SAE_1._01_1._02
         }
                 private void GameEngine(object sender, EventArgs e)
         {
+           
             foreach (Rectangle x in monCanvas.Children.OfType<Rectangle>())
             {
                 MouvementJoueur(x);
@@ -154,22 +156,31 @@ namespace JeuDeTir_SAE_1._01_1._02
             //Gauche
             if (x is Rectangle && (string)x.Tag == "joueur" && allerGauche && Canvas.GetLeft(x) > 0)
             {
+                int angle = -90;
                 Canvas.SetLeft(x, Canvas.GetLeft(x) - vitesseJoueur);
+                x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
             }
             //Droite
             else if (allerDroite && Canvas.GetLeft(x) + x.Width < Application.Current.MainWindow.ActualWidth)
             {
+                int angle = 90;
                 Canvas.SetLeft(x, Canvas.GetLeft(x) + vitesseJoueur);
+                x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
             }
             //Haut
             if (x is Rectangle && (string)x.Tag == "joueur" && allerHaut && Canvas.GetTop(x) > 0)
             {
+                int angle = 360;
                 Canvas.SetTop(x, Canvas.GetTop(x) - vitesseJoueur);
+                x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
+
             }
             //Bas
             else if (allerBas && Canvas.GetTop(x) + x.Height < Application.Current.MainWindow.ActualHeight)
             {
+                int angle = -180;
                 Canvas.SetTop(x, Canvas.GetTop(x) + vitesseJoueur);
+                x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
             }
         }
 

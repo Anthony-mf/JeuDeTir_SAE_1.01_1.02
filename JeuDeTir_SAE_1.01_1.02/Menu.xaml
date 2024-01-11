@@ -13,6 +13,9 @@
         <ImageBrush ImageSource="/FondMenu.png"/>
     </Window.Background>
     <Canvas x:Name="MenuCanvas">
+        <Canvas.Background>
+            <ImageBrush ImageSource="/FondMenu.png" />
+        </Canvas.Background>
         <Label
             x:Name="Titre"
             Width="137"

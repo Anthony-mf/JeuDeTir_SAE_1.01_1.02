@@ -11,13 +11,9 @@
 
   <ItemGroup>
     <None Remove="Arriereplan.jpg" />
-    <None Remove="FondCanvas.jpg" />
-    <None Remove="FondMenu.png" />
-    <None Remove="logo.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="FondCanvas.jpg" />
     <Resource Include="FondMenu.png" />
     <Resource Include="logo.png" />
   </ItemGroup>
