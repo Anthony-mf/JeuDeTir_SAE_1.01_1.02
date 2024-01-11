@@ -9,11 +9,20 @@
     Width="800"
     Height="450"
     ResizeMode="NoResize"
+    WindowStartupLocation="CenterOwner"
+    WindowState="Maximized"
     mc:Ignorable="d"
     FocusManager.FocusedElement="{Binding ElementName=monCanvas}">
     <Canvas x:Name="monCanvas"
             Focusable="True"
             KeyDown="CanvasToucheBaissée"
             KeyUp="CanvasToucheRelachée">
+        <Rectangle 
+            Name="joueur" 
+            Height="50" 
+            Canvas.Left="154" 
+            Canvas.Top="147" 
+            Width="50"/>
+
     </Canvas>
 </Window>
