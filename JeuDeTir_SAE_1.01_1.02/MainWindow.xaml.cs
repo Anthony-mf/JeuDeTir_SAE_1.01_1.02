@@ -28,7 +28,7 @@ namespace JeuDeTir_SAE_1._01_1._02
         //déplacement haut/bas
         private bool allerHaut, allerBas = false;
         //vitesse du joueur
-        private int VitesseJoueur = 7;
+        private int vitesseJoueur = 7;
         // vitesse du tir du joueur
         private int vitesseBallesJoueurs = 10;
         //liste des objets à suppr
@@ -70,11 +70,11 @@ namespace JeuDeTir_SAE_1._01_1._02
                 Rectangle nouveauJoueur = new Rectangle
                 {
                     Tag = "joueur",
-                    Height = 150,
-                    Width = 150,
-                    Fill = joueurSkin
+                    Height = 15,
+                    Width = 15,
+                    Fill = Brushes.Red,
                 };
-                Canvas.SetTop(nouveauJoueur, 350);
+                Canvas.SetTop(nouveauJoueur, 100);
                 Canvas.SetLeft(nouveauJoueur, gauche);
                 monCanvas.Children.Add(nouveauJoueur);
                 gauche -= 100;
@@ -121,20 +121,20 @@ namespace JeuDeTir_SAE_1._01_1._02
             if (x is Rectangle && (string)x.Tag == "joueur" && allerGauche && Canvas.GetLeft(x) > 0)
             {
                 int angle = -90;
-                Canvas.SetLeft(x, Canvas.GetLeft(x) - VitesseJoueur);
+                Canvas.SetLeft(x, Canvas.GetLeft(x) - vitesseJoueur);
                 x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
             }
             //droite
             else if (allerDroite && Canvas.GetLeft(x) + x.Width < Application.Current.MainWindow.Width)
             {
                 int angle = 90;
-                Canvas.SetLeft(x, Canvas.GetLeft(x) + VitesseJoueur);
+                Canvas.SetLeft(x, Canvas.GetLeft(x) + vitesseJoueur);
                 x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
             }
             if (x is Rectangle && (string)x.Tag == "joueur" && allerHaut && Canvas.GetTop(x) > 0)
             {
                 int angle = 360;
-                Canvas.SetTop(x, Canvas.GetTop(x) - VitesseJoueur);
+                Canvas.SetTop(x, Canvas.GetTop(x) - vitesseJoueur);
                 x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
 
             }
@@ -142,7 +142,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             else if (allerBas && Canvas.GetTop(x) + x.Height < Application.Current.MainWindow.Height)
             {
                 int angle = -180;
-                Canvas.SetTop(x, Canvas.GetTop(x) + VitesseJoueur);
+                Canvas.SetTop(x, Canvas.GetTop(x) + vitesseJoueur);
                 x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
             }
         }
