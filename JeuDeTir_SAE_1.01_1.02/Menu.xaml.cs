@@ -22,17 +22,12 @@ namespace JeuDeTir_SAE_1._01_1._02
     {
         public Menu()
         {
-            InitializeComponent();
-            Menu fenetreNiveau = new Menu();
-            fenetreNiveau.ShowDialog();
-            if (fenetreNiveau.DialogResult == false)
-                Application.Current.Shutdown();
-            //InitializeGame();
+     
         }
 
         private void butJouer_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
+          
         }
 
         private void CBdifficulté_SelectionChanged(object sender, SelectionChangedEventArgs e)

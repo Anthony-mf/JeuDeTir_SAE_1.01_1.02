@@ -11,6 +11,9 @@
     Icon="/logo.png"
     mc:Ignorable="d">
     <Canvas x:Name="MenuCanvas">
+        <Canvas.Background>
+            <ImageBrush ImageSource="/FondMenu.png" />
+        </Canvas.Background>
         <Label
             x:Name="Titre"
             Width="137"

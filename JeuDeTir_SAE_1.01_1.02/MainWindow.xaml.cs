@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -34,8 +35,9 @@ namespace JeuDeTir_SAE_1._01_1._02
         private List<Rectangle> supprimerObjet = new List<Rectangle>();
         //nb joueurs 
         private int totalJoueur;
+        //minuterie
         private DispatcherTimer minuterie = new DispatcherTimer();
-        private UIElement joueur;
+        
 
         public MainWindow()
         {
@@ -45,6 +47,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             monCanvas.Background = fondWPF;
             ImageBrush fondMenu = new ImageBrush();
             fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/statique/FondMenu.png"));
+
             //MenuCanvas.Background = fondMenu;
             Menu menu = new Menu();
             menu.ShowDialog();
@@ -52,6 +55,8 @@ namespace JeuDeTir_SAE_1._01_1._02
             // rafraissement toutes les 16 milliseconds
             minuterie.Interval = TimeSpan.FromMilliseconds(16);
             minuterie.Start();
+            CreationJoueur(1);
+            
         }
 
         private void CreationJoueur(int nbJoueur)
@@ -61,19 +66,19 @@ namespace JeuDeTir_SAE_1._01_1._02
             for (int i = 0; i < nbJoueur; i++)
             {
                 ImageBrush joueurSkin = new ImageBrush();
-                //joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/Statique/tortue_statique.png"));
+                joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/Statique/tortue_statique.png"));
                 Rectangle nouveauJoueur = new Rectangle
                 {
                     Tag = "joueur",
                     Height = 150,
                     Width = 150,
-                    Fill = Brushes.Red,
+                    Fill = joueurSkin
                 };
                 Canvas.SetTop(nouveauJoueur, 350);
                 Canvas.SetLeft(nouveauJoueur, gauche);
                 monCanvas.Children.Add(nouveauJoueur);
                 gauche -= 100;
-
+                
             }
         }
         //---------------------------------------------------------------------------
@@ -94,14 +99,16 @@ namespace JeuDeTir_SAE_1._01_1._02
             if ((string)x.Tag == "ballesJoueursjjjjjj" )//&& )
             {
                 supprimerObjet.Add(x);
+
             }
         }
         private void GameEngine(object sender, EventArgs e)
         {
-            CreationJoueur(1);
+           
             foreach (Rectangle x in monCanvas.Children.OfType<Rectangle>())
             {
                 MouvementJoueur(x);
+                TestBallesAllié(x);
                 
             }
         }
@@ -110,23 +117,33 @@ namespace JeuDeTir_SAE_1._01_1._02
 
         private void MouvementJoueur(Rectangle x)
         {
+           
             if (x is Rectangle && (string)x.Tag == "joueur" && allerGauche && Canvas.GetLeft(x) > 0)
             {
+                int angle = -90;
                 Canvas.SetLeft(x, Canvas.GetLeft(x) - VitesseJoueur);
+                x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
             }
             //droite
             else if (allerDroite && Canvas.GetLeft(x) + x.Width < Application.Current.MainWindow.Width)
             {
+                int angle = 90;
                 Canvas.SetLeft(x, Canvas.GetLeft(x) + VitesseJoueur);
+                x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
             }
             if (x is Rectangle && (string)x.Tag == "joueur" && allerHaut && Canvas.GetTop(x) > 0)
             {
+                int angle = 360;
                 Canvas.SetTop(x, Canvas.GetTop(x) - VitesseJoueur);
+                x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
+
             }
             //bas
             else if (allerBas && Canvas.GetTop(x) + x.Height < Application.Current.MainWindow.Height)
             {
+                int angle = -180;
                 Canvas.SetTop(x, Canvas.GetTop(x) + VitesseJoueur);
+                x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
             }
         }
 
@@ -163,15 +180,15 @@ namespace JeuDeTir_SAE_1._01_1._02
                 // création tir
                 Rectangle nouvelleBalle = new Rectangle
                 {
-                    Tag = "bulletPlayer",
+                    Tag = "ballesJoueur",
                     Height = 20,
                     Width = 5,
                     Fill = Brushes.White,
                     Stroke = Brushes.Red
                 };
                 // on place le tir à l’endroit du joueur
-                Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) - nouvelleBalle.Height);
-                Canvas.SetLeft(nouvelleBalle, Canvas.GetLeft(joueur) + 75);
+                //Canvas.SetTop(nouvelleBalle, Canvas.GetTop() - nouvelleBalle.Height);
+                //Canvas.SetLeft(nouvelleBalle, Canvas.GetLeft(joueur) + 75);
                 // on place le tir dans le canvas
                 monCanvas.Children.Add(nouvelleBalle);
             }
@@ -191,27 +208,6 @@ namespace JeuDeTir_SAE_1._01_1._02
                 allerHaut = false;
             }
             if (e.Key == Key.Down)
-            {
-                allerBas = false;
-            }
-        }
-
-        private void CanvasToucheLevées(object sender, KeyEventArgs e)
-        {
-            //stop les déplacements si la touche est relevée
-            if (e.Key == Key.Up)
-            {
-                allerGauche = false;
-            }
-            if (e.Key == Key.Up)
-            {
-                allerDroite = false;
-            }
-            if (e.Key == Key.Up)
-            {
-                allerHaut = false;
-            }
-            if (e.Key == Key.Up)
             {
                 allerBas = false;
             }

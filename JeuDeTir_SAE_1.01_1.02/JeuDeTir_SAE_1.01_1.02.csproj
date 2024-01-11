@@ -11,9 +11,11 @@
 
   <ItemGroup>
     <None Remove="Arriereplan.jpg" />
+    <None Remove="FondMenu.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="FondMenu.png" />
     <Resource Include="logo.png" />
   </ItemGroup>
 
