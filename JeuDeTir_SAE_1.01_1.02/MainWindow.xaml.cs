@@ -129,6 +129,8 @@ namespace JeuDeTir_SAE_1._01_1._02
             }
         }
 
+
+
         //---------------------------------------------------------------------------
         //-----------------------------TIRS------------------------------------------
 
@@ -168,7 +170,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             }
 
         }
-                private void GameEngine(object sender, EventArgs e)
+        private void GameEngine(object sender, EventArgs e)
         {
             Rect joueur1 = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur),
             joueur.Width, joueur.Height);
