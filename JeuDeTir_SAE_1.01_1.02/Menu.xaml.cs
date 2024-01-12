@@ -22,14 +22,16 @@ namespace JeuDeTir_SAE_1._01_1._02
     {
         public Menu()
         {
-            
+            InitializeComponent();
+            // on affecte le skin du menu
+            ImageBrush fondMenu = new ImageBrush();
+            fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondMenu.png"));
+            menuCanvas.Background = fondMenu;
         }
 
         private void butJouer_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
-            //Menu.Close();
-
         }
 
         private void CBdifficulté_SelectionChanged(object sender, SelectionChangedEventArgs e)
