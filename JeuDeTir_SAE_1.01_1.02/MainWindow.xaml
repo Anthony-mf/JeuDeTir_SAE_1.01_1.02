@@ -6,11 +6,11 @@
     xmlns:local="clr-namespace:JeuDeTir_SAE_1._01_1._02"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Tortank Simulator"
-    Width="1600"
-    Height="800"
+    Width="1400"
+    Height="700"
     FocusManager.FocusedElement="{Binding ElementName=monCanvas}"
     ResizeMode="NoResize"
-    WindowStartupLocation="CenterScreen"
+    WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <Canvas
         x:Name="monCanvas"
@@ -22,6 +22,7 @@
             Canvas.Left="800"
             Canvas.Top="400"
             Width="50"
-            Height="50" />
+            Height="50"
+            Fill="Red" />
     </Canvas>
 </Window>

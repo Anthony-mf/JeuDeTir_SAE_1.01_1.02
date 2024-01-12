@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection.Metadata;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,24 +24,29 @@ namespace JeuDeTir_SAE_1._01_1._02
     /// </summary>
     public partial class MainWindow : Window
     {
-        //déplacement gauche/droite
-        private bool allerGauche, allerDroite = false;
-        //déplacement haut/bas
-        private bool allerHaut, allerBas = false;
+        //déplacement gauche/droite/haut/bas
+        private bool allerGauche, allerDroite, allerHaut, allerBas = false;
+        //vitesse de l'ennemi
+        private int vitesseEnnemi = 2;
         //vitesse du joueur
         private int vitesseJoueur = 7;
         // vitesse du tir du joueur
         private int vitesseBallesJoueurs = 10;
-        //liste des objets à suppr
+        //vitesse balle ennemi
+        private int vitesseBallesEnnemis = 2;
+        //liste des objets à supprimer
         private List<Rectangle> supprimerObjet = new List<Rectangle>();
-        //Liste des images pour le joueur
-        private List<Image> animationJoueur = new List<Image>();
-        //Liste des images pour les ennemis
-        private List<Image> animationEnnemis = new List<Image>();
+        //Liste des images de marche pour le joueur
+        private ImageBrush[] skinJoueur;
         //minuterie
         private DispatcherTimer minuterie = new DispatcherTimer();
         //direction
         private string direction;
+        //minuterie de tir ennemi
+        private int minuterieTir;
+        //limite de la frequence du tir ennemi
+        private int limiteMinuterieTir = 90;
+
         
 
         public MainWindow()
@@ -59,10 +65,8 @@ namespace JeuDeTir_SAE_1._01_1._02
             ImageBrush fondWPF = new ImageBrush();
             fondWPF.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondCanvas.jpg"));
             monCanvas.Background = fondWPF;
-            // on affecte le skin du joueur
             ImageBrush joueurSkin = new ImageBrush();
-            joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/tortue_statique.png"));
-            joueur.Fill = joueurSkin;
+            joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/tortue_statique.png"));
             minuterie.Tick += MoteurDeJeu;
             // rafraissement toutes les 16 milliseconds
             minuterie.Interval = TimeSpan.FromMilliseconds(16);
@@ -74,23 +78,21 @@ namespace JeuDeTir_SAE_1._01_1._02
 
         private void CreationEnnemis(int nbEnnemis)
         {
-            // on affecte le skin des ennemis
-            ImageBrush ennemiSkin = new ImageBrush();
-            ennemiSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/escargot_statique.png"));
             Random rdm1 = new Random();
             Random rdm2 = new Random();
             double x, y;
-            int largeurMax = (int)Application.Current.MainWindow.Width;
-            int hauteurMax = (int)Application.Current.MainWindow.Height;
+            // on affecte le skin des ennemis
+            ImageBrush ennemiSkin = new ImageBrush();
+            ennemiSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/Statique/escargot_statique.png"));
             for (int i = 0; i < nbEnnemis; i++)
             {
-                x = rdm1.Next(100, 700);
-                y = rdm2.Next(100, 1500);
+                x = rdm1.Next(150, 550);
+                y = rdm2.Next(150, 1250);
                 Rectangle nouvelEnnemi = new Rectangle
                 {
                     Tag = "ennemi",
-                    Height = 35,
-                    Width = 35,
+                    Height = 50,
+                    Width = 50,
                     Fill = ennemiSkin,
                 };
                 Canvas.SetTop(nouvelEnnemi, x);
@@ -107,8 +109,6 @@ namespace JeuDeTir_SAE_1._01_1._02
             if (x is Rectangle && (string)x.Tag == "ballesJoueurs_H")
             {
                 Canvas.SetTop(x, Canvas.GetTop(x) - vitesseBallesJoueurs);//monte
-                //création rectangle pour une balle
-                Rect balles = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
                 if (Canvas.GetTop(x) < 0)
                 {
                     // si c’est le cas on l’ajoute à la liste des éléments à supprimer
@@ -119,8 +119,6 @@ namespace JeuDeTir_SAE_1._01_1._02
             if (x is Rectangle && (string)x.Tag == "ballesJoueurs_B")
             {
                 Canvas.SetTop(x, Canvas.GetTop(x) + vitesseBallesJoueurs);//descend
-                //création rectangle pour une balle
-                Rect balles = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
                 if (Canvas.GetTop(x) > 800)
                 {
                     // si c’est le cas on l’ajoute à la liste des éléments à supprimer
@@ -131,8 +129,6 @@ namespace JeuDeTir_SAE_1._01_1._02
             if (x is Rectangle && (string)x.Tag == "ballesJoueurs_D")
             {
                 Canvas.SetLeft(x, Canvas.GetLeft(x) + vitesseBallesJoueurs);//droite
-                //création rectangle pour une balle
-                Rect balles = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
                 if (Canvas.GetLeft(x) > 1600)
                 {
                     // si c’est le cas on l’ajoute à la liste des éléments à supprimer
@@ -143,8 +139,6 @@ namespace JeuDeTir_SAE_1._01_1._02
             if (x is Rectangle && (string)x.Tag == "ballesJoueurs_G")
             {
                 Canvas.SetLeft(x, Canvas.GetLeft(x) - vitesseBallesJoueurs);//gauche
-                //création rectangle pour une balle
-                Rect balles = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
                 if (Canvas.GetLeft(x) < 0)
                 {
                     // si c’est le cas on l’ajoute à la liste des éléments à supprimer
@@ -153,16 +147,93 @@ namespace JeuDeTir_SAE_1._01_1._02
             }
 
         }
+
+        // Creation munitions ennemi
+        private void MunitionsEnnemis(double x, double y)
+        {
+            // création des tirs ennemies tirant vers l'objet joueur
+            // x et y position du tir
+            Rectangle nouvelleMunitionEnnemi = new Rectangle
+            {
+                Tag = "munitionsEnnemis",
+                Height = 40,
+                Width = 15,
+                Fill = Brushes.Yellow,
+                Stroke = Brushes.Black,
+                StrokeThickness = 5
+            };
+            Canvas.SetTop(nouvelleMunitionEnnemi, y);
+            Canvas.SetLeft(nouvelleMunitionEnnemi, x);
+            monCanvas.Children.Add(nouvelleMunitionEnnemi);
+        }
+
+        private void MinuterieDeTirEnnemi()
+        {
+            minuterieTir -= 2;
+            if (minuterieTir == 0)
+            { 
+                MunitionsEnnemis((Canvas.GetLeft(joueur)) + joueur.Width / 2, 10);
+                minuterieTir = limiteMinuterieTir;
+            }
+        }
+        private void CollisionJoueur(Rectangle x)
+        {
+            if ((string)x.Tag == "ennemi")
+            {
+                //création d’un rectangle joueur pour la détection de collision
+                Rect joueurRect = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur), joueur.Width, joueur.Height);
+                Rect ennemiRect = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+                if (joueurRect.IntersectsWith(ennemiRect))
+                {
+                    // collision avec le joueur et fin de la partie
+                    minuterie.Stop();
+                }
+            }
+        }
+        private void DeplacementsEnnemis(Rectangle x)
+        {
+            if ((string)x.Tag == "ennemi")
+            {
+                if (direction == "D" && Canvas.GetLeft(x) + x.Width < Application.Current.MainWindow.Width)
+                {
+                    int angle = -90;
+                    Canvas.SetLeft(x, Canvas.GetLeft(x) - vitesseEnnemi);
+                    x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
+                }
+                if (direction == "G" && Canvas.GetLeft(x) > 0)
+                {
+                    int angle = 90;
+                    Canvas.SetLeft(x, Canvas.GetLeft(x) + vitesseEnnemi);
+                    x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
+                }
+                if (direction == "H" && Canvas.GetTop(x) > 0)
+                {
+                    int angle = 180;
+                    Canvas.SetTop(x, Canvas.GetTop(x) + vitesseEnnemi);
+                    x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
+                }
+                if (direction == "B" && Canvas.GetTop(x) + x.Height < Application.Current.MainWindow.Height)
+                {
+                    int angle = 360;
+                    Canvas.SetTop(x, Canvas.GetTop(x) - vitesseEnnemi);
+                    x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
+                }
+                }
+        }
+        
+        private void DeplacementsTirEnnemis()
+        {
+
+        }
+
         private void MoteurDeJeu(object sender, EventArgs e)
         {
-            Rect joueur1 = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur),
-            joueur.Width, joueur.Height);
             MouvementJoueur();
-
+            MinuterieDeTirEnnemi();
             foreach (Rectangle x in monCanvas.Children.OfType<Rectangle>())
             {
                 DeplacementsEtCollisionBalleJoueur(x);
-
+                DeplacementsEnnemis(x);
             }
             SupprimerObjet();
         }
@@ -180,6 +251,7 @@ namespace JeuDeTir_SAE_1._01_1._02
 
         private void MouvementJoueur()
         {
+            //Gauche
             if (allerGauche && Canvas.GetLeft(joueur) > 0)
             {
                 direction = "G";
@@ -188,14 +260,15 @@ namespace JeuDeTir_SAE_1._01_1._02
                 joueur.RenderTransform = new RotateTransform(angle, joueur.Width / 2, joueur.Height / 2);
             }
             //Droite
-            else if (allerDroite && Canvas.GetLeft(joueur) + joueur.Width < Application.Current.MainWindow.Width)
+            if (allerDroite && Canvas.GetLeft(joueur) + joueur.Width < Application.Current.MainWindow.Width)
             {
                 direction = "D";
                 int angle = 90;
                 Canvas.SetLeft(joueur, Canvas.GetLeft(joueur) + vitesseJoueur);
                 joueur.RenderTransform = new RotateTransform(angle, joueur.Width / 2, joueur.Height / 2);
             }
-            if (allerHaut && Canvas.GetLeft(joueur) > 0)
+            //Haut
+            if (allerHaut && Canvas.GetTop(joueur) > 0)
             {
                 direction = "H";
                 int angle = 360;
@@ -204,7 +277,7 @@ namespace JeuDeTir_SAE_1._01_1._02
 
             }
             //Bas
-            else if (allerBas && Canvas.GetTop(joueur) + joueur.Height < Application.Current.MainWindow.Height)
+            if (allerBas && Canvas.GetTop(joueur) + joueur.Height < Application.Current.MainWindow.Height)
             {
                 direction="B";
                 int angle = -180;
@@ -255,7 +328,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                         Stroke = Brushes.Gray
                     };
                     // on place le tir à l’endroit du joueur
-                    Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) - nouvelleBalle.Height);
+                    Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) + joueur.Height / 2 - nouvelleBalle.Height / 2);
                     Canvas.SetLeft(nouvelleBalle, Canvas.GetLeft(joueur) + joueur.Width / 2);
                     // on place le tir dans le canvas
                     monCanvas.Children.Add(nouvelleBalle);
@@ -271,7 +344,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                         Stroke = Brushes.Gray
                     };
                     // on place le tir à l’endroit du joueur
-                    Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) - nouvelleBalle.Height);
+                    Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) + joueur.Height / 2 - nouvelleBalle.Height / 2);
                     Canvas.SetLeft(nouvelleBalle, Canvas.GetLeft(joueur) + joueur.Width / 2);
                     // on place le tir dans le canvas
                     monCanvas.Children.Add(nouvelleBalle);
@@ -287,7 +360,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                         Stroke = Brushes.Gray
                     };
                     // on place le tir à l’endroit du joueur
-                    Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) - nouvelleBalle.Height);
+                    Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) + joueur.Height / 2 - nouvelleBalle.Height);
                     Canvas.SetLeft(nouvelleBalle, Canvas.GetLeft(joueur) + joueur.Width / 2);
                     // on place le tir dans le canvas
                     monCanvas.Children.Add(nouvelleBalle);
@@ -303,23 +376,22 @@ namespace JeuDeTir_SAE_1._01_1._02
                         Stroke = Brushes.Gray
                     };
                     // on place le tir à l’endroit du joueur
-                    Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) - nouvelleBalle.Height);
+                    Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) + joueur.Height / 2 - nouvelleBalle.Height);
                     Canvas.SetLeft(nouvelleBalle, Canvas.GetLeft(joueur) + joueur.Width / 2);
                     // on place le tir dans le canvas
                     monCanvas.Children.Add(nouvelleBalle);
                 }
-
             }
         }
 
         private void CanvasToucheLevées(object sender, KeyEventArgs e)
         {
             //stop les déplacements si la touche est relevée
-            if (e.Key == Key.Up)
+            if (e.Key == Key.Left)
             {
                 allerGauche = false;
             }
-            if (e.Key == Key.Up)
+            if (e.Key == Key.Right)
             {
                 allerDroite = false;
             }
@@ -327,7 +399,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             {
                 allerHaut = false;
             }
-            if (e.Key == Key.Up)
+            if (e.Key == Key.Down)
             {
                 allerBas = false;
             }
