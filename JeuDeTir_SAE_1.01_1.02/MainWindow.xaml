@@ -8,31 +8,24 @@
     Title="Tortank Simulator"
     Width="1400"
     Height="700"
-    FocusManager.FocusedElement="{Binding ElementName=monCanvas}"
+    
     ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner"
-    mc:Ignorable="d">
-    <Canvas
-        x:Name="monCanvas"
-        Focusable="True"
-        KeyDown="CanvasToucheBaissée"
-        KeyUp="CanvasToucheLevées">
-        <Rectangle
-            Name="joueur"
-            Canvas.Left="800"
-            Canvas.Top="400"
-            Width="50"
-            Height="50"
-            Fill="Red" />
-        <Label
-            x:Name="labEnnemisRestants"
-            Canvas.Left="20"
-            Canvas.Top="20"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Content="Ennemis restants : "
-            FontSize="16"
-            FontWeight="Bold" />
-
-    </Canvas>
+    WindowState="Maximized"
+    mc:Ignorable="d"
+    FocusManager.FocusedElement="{Binding ElementName=monCanvas}">
+<Canvas x:Name="monCanvas"
+            Focusable="True"
+            KeyDown="CanvasToucheBaissée"
+            KeyUp="CanvasToucheLevées">
+    <Canvas.Background>
+        <ImageBrush ImageSource="/FondCanvas.jpg"/>
+    </Canvas.Background>
+    <Rectangle 
+            Name="joueur" 
+            Height="50" 
+            Canvas.Left="154" 
+            Canvas.Top="147" 
+            Width="50"/>
+ </Canvas>
 </Window>
