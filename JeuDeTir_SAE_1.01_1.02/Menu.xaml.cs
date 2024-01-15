@@ -33,10 +33,5 @@ namespace JeuDeTir_SAE_1._01_1._02
         {
             this.DialogResult = true;
         }
-
-        private void CBdifficulté_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }

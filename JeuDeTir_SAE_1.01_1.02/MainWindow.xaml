@@ -24,5 +24,15 @@
             Width="50"
             Height="50"
             Fill="Red" />
+        <Label
+            x:Name="labEnnemisRestants"
+            Canvas.Left="20"
+            Canvas.Top="20"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Ennemis restants : "
+            FontSize="16"
+            FontWeight="Bold" />
+
     </Canvas>
 </Window>
