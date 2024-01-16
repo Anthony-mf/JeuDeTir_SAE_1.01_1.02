@@ -8,24 +8,93 @@
     Title="Tortank Simulator"
     Width="1400"
     Height="700"
-    
+    FocusManager.FocusedElement="{Binding ElementName=monCanvas}"
     ResizeMode="NoResize"
-    WindowStartupLocation="CenterOwner"
-    WindowState="Maximized"
-    mc:Ignorable="d"
-    FocusManager.FocusedElement="{Binding ElementName=monCanvas}">
-<Canvas x:Name="monCanvas"
-            Focusable="True"
-            KeyDown="CanvasToucheBaissée"
-            KeyUp="CanvasToucheLevées">
-    <Canvas.Background>
-        <ImageBrush ImageSource="/FondCanvas.jpg"/>
-    </Canvas.Background>
-    <Rectangle 
-            Name="joueur" 
-            Height="50" 
-            Canvas.Left="154" 
-            Canvas.Top="147" 
-            Width="50"/>
- </Canvas>
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Canvas
+        x:Name="monCanvas"
+        Width="1400"
+        Height="700"
+        Focusable="True"
+        KeyDown="CanvasToucheBaissée"
+        KeyUp="CanvasToucheLevées">
+        <Rectangle
+            Name="joueur"
+            Canvas.Left="660"
+            Canvas.Top="305"
+            Width="50"
+            Height="50"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Fill="Red" />
+        <Rectangle
+            x:Name="buisson1"
+            Canvas.Left="-10"
+            Canvas.Top="80"
+            Width="120"
+            Height="500"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Fill="Green" />
+        <Rectangle
+            x:Name="buisson2"
+            Canvas.Left="1280"
+            Canvas.Top="80"
+            Width="120"
+            Height="500"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Fill="Green" />
+        <Rectangle
+            x:Name="buisson3"
+            Canvas.Top="-10"
+            Width="710"
+            Height="100"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Fill="Green" />
+        <Rectangle
+            x:Name="buisson4"
+            Canvas.Left="700"
+            Canvas.Top="-10"
+            Width="710"
+            Height="100"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Fill="Green" />
+        <Rectangle
+            x:Name="buisson5"
+            Canvas.Top="565"
+            Width="700"
+            Height="120"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Fill="Green" />
+        <Rectangle
+            x:Name="buisson6"
+            Canvas.Left="700"
+            Canvas.Top="565"
+            Width="700"
+            Height="120"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Fill="Green" />
+        <Label
+            x:Name="labEnnemisTués"
+            Canvas.Left="20"
+            Canvas.Top="20"
+            Content="Ennemis tués : "
+            FontSize="16"
+            FontWeight="Bold"
+            Foreground="White" />
+        <Label
+            x:Name="labTempsPassé"
+            Canvas.Left="20"
+            Canvas.Top="50"
+            Content="Temps passé : "
+            FontSize="16"
+            FontWeight="Bold"
+            Foreground="White" />
+    </Canvas>
 </Window>

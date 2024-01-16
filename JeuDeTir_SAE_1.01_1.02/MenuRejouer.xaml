@@ -1,20 +1,30 @@
 ﻿<Window
-    x:Class="JeuDeTir_SAE_1._01_1._02.Menu"
+    x:Class="JeuDeTir_SAE_1._01_1._02.MenuRejouer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:JeuDeTir_SAE_1._01_1._02"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Menu"
+    Title="Vous avez perdu !"
     Width="768"
     Height="768"
     Icon="/logo.png"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-    <Canvas x:Name="menuCanvas">
+    <Canvas x:Name="canvasMenuRejouer">
+        <Label
+            x:Name="labMenuRejouer"
+            Canvas.Left="223"
+            Canvas.Top="329"
+            Background="Transparent"
+            BorderThickness="0"
+            Content="Oh non ! Vous avez perdu"
+            FontFamily="Impact"
+            FontSize="30"
+            FontWeight="Bold" />
         <Button
-            x:Name="butJouer"
+            x:Name="butRejouer"
             Canvas.Left="285"
             Canvas.Top="20"
             Width="200"
@@ -23,8 +33,8 @@
             VerticalAlignment="Top"
             Background="Transparent"
             BorderThickness="0"
-            Click="butJouer_Click"
-            Content="JOUER"
+            Click="butRejouer_Click"
+            Content="REJOUER"
             FontFamily="Impact"
             FontSize="36"
             FontWeight="Bold" />

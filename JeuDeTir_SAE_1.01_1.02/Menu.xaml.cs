@@ -19,7 +19,8 @@ namespace JeuDeTir_SAE_1._01_1._02
     /// Logique d'interaction pour Menu.xaml
     /// </summary>
     public partial class Menu : Window
-    {
+    { 
+        public bool Rejouer { get; private set; }
         public Menu()
         {
             InitializeComponent();
@@ -27,11 +28,16 @@ namespace JeuDeTir_SAE_1._01_1._02
             ImageBrush fondMenu = new ImageBrush();
             fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondMenu.png"));
             menuCanvas.Background = fondMenu;
+            menuCanvas.Background.Opacity = 0.5;
         }
 
-        private void butJouer_Click(object sender, RoutedEventArgs e)
+        public void butJouer_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
+        }
+        public void butQuitter_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
         }
     }
 }
