@@ -1,7 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Reflection.Metadata;
@@ -18,7 +16,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace JeuDeTir_SAE_1._01_1._02
 {
@@ -36,9 +33,10 @@ namespace JeuDeTir_SAE_1._01_1._02
         // vitesse du tir du joueur
         private int vitesseBallesJoueurs = 10;
         //vitesse balle ennemi
-        private int vitesseBallesEnnemis = 3;
+        private int vitesseBallesEnnemis = 10;
         //liste des objets à supprimer
         private List<Rectangle> supprimerObjet = new List<Rectangle>();
+        //Liste d'ennemis
         private List<Rectangle> ennemisListe = new List<Rectangle>();
         //Liste des images de marche pour le joueur
         private ImageBrush[] animationMarcheJoueur;
@@ -66,15 +64,12 @@ namespace JeuDeTir_SAE_1._01_1._02
         Rect rectJoueur = new Rect();
         // rectangle ennemi
         Rect rectEnnemi = new Rect();
-        // ennemi
-        UIElement ennemis = new UIElement();
 
 
         public MainWindow()
         {
             InitializeComponent();
             InitialisationImage();
-            
             //montrer le menu
             menu.ShowDialog();
             //menu.Owner = this;
@@ -95,23 +90,18 @@ namespace JeuDeTir_SAE_1._01_1._02
             minuterie.Interval = TimeSpan.FromMilliseconds(16);
             minuterie.Start();
             CreationEnnemis(5);
-
         }
 
         private void MoteurDeJeu(object sender, EventArgs e)
         {
             MouvementJoueur();
             MinuterieDeTirEnnemi();
-            
-
             foreach (Rectangle x in monCanvas.Children.OfType<Rectangle>())
             {
                 DeplacementsEtCollisionBalleJoueur(x);
                 Collisions(x);
                 MinuterieDeplacementsEnnemis(x);
                 DéplacementMunitions(x);
-                
-
             }
             SupprimerObjet();
         }
@@ -128,7 +118,7 @@ namespace JeuDeTir_SAE_1._01_1._02
 
         private void ChoixDifficulté()
         {
-            switch (menu.CBdifficulte.SelectedItem)
+            switch (menu.cbDifficulte.SelectedItem)
             {
                 case 0:
                     break;
@@ -163,7 +153,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                     Width = 50,
                     Fill = ennemiSkin,
                 };
-                
+
                 Canvas.SetTop(nouvelEnnemi, x);
                 Canvas.SetLeft(nouvelEnnemi, y);
                 monCanvas.Children.Add(nouvelEnnemi);
@@ -172,19 +162,18 @@ namespace JeuDeTir_SAE_1._01_1._02
             }
         }
 
-
         // Creation munitions ennemi
-        private void MunitionsEnnemis(double x, double y)
+        private void MunitionsEnnemis(double x, double y, double joueurX, double joueurY)
         {
             // Calculer la direction entre l'ennemi et le joueur
-            System.Windows.Vector direction = new System.Windows.Vector(positionJoueur.X - x, positionJoueur.Y - y);
+            System.Windows.Vector direction = new System.Windows.Vector(joueurX - x, joueurY - y);
             direction.Normalize();
 
             // création des tirs ennemis tirant vers l'objet joueur
             // x et y position du tir
             Rectangle nouvelleMunitionEnnemi = new Rectangle
             {
-                Tag = "munitionsEnnemis", // Utilisez une chaîne de caractères ici
+                Tag = new TranslateTransform(direction.X * vitesseBallesEnnemis, direction.Y * vitesseBallesEnnemis), // Utilisez TranslateTransform pour le mouvement
                 Height = 40,
                 Width = 15,
                 Fill = Brushes.Yellow,
@@ -192,19 +181,12 @@ namespace JeuDeTir_SAE_1._01_1._02
                 StrokeThickness = 5
             };
 
-            
-
-            Canvas.SetTop(nouvelleMunitionEnnemi, x);
-            Canvas.SetLeft(nouvelleMunitionEnnemi, y);
-
-            // Ajout d'un TranslateTransform
-            TranslateTransform transform = new TranslateTransform(direction.X * vitesseBallesEnnemis, direction.Y * vitesseBallesEnnemis);
-            nouvelleMunitionEnnemi.RenderTransform = transform;
-
-            nouvelleMunitionEnnemi.Tag = transform;
-
+            Canvas.SetTop(nouvelleMunitionEnnemi, y);
+            Canvas.SetLeft(nouvelleMunitionEnnemi, x);
+            nouvelleMunitionEnnemi.Tag = new TranslateTransform(direction.X * vitesseBallesEnnemis, direction.Y * vitesseBallesEnnemis); // Modification du Tag
             monCanvas.Children.Add(nouvelleMunitionEnnemi);
         }
+
 
         private void DéplacementMunitions(Rectangle x)
         {
@@ -225,13 +207,13 @@ namespace JeuDeTir_SAE_1._01_1._02
 
         private void MinuterieDeTirEnnemi()
         {
-            minuterieTir -= 1;
+            minuterieTir -= 2;
             if (minuterieTir < 0)
             {
-                // Utilisez les coordonnées de chaque ennemi pour les munitions ennemies
+                // Utilisez les coordonnées de l'ennemi pour les munitions ennemies
                 foreach (Rectangle ennemi in ennemisListe)
                 {
-                    MunitionsEnnemis(Canvas.GetLeft(ennemi) + ennemi.Width / 2, Canvas.GetTop(ennemi) + ennemi.Height / 2);
+                    MunitionsEnnemis(Canvas.GetLeft(ennemi), Canvas.GetTop(ennemi), positionJoueur.X, positionJoueur.Y);
                 }
 
                 minuterieTir = limiteMinuterieTir;
@@ -295,21 +277,23 @@ namespace JeuDeTir_SAE_1._01_1._02
                     // appel à la méthode IntersectsWith pour détecter la collision
                     if ( munitions.IntersectsWith(ennemi))
                     {
-                        // on ajoute l’ennemi de la liste à supprimer e on décrémente le nombre d’ennemis
+                        // on ajoute l’ennemi de la liste à supprimer eton décrémente le nombre d’ennemis
                         supprimerObjet.Add(x);
                         supprimerObjet.Add(y);
                         ennemisRestants -= 1;
-                    }*/
-                //}
-            //}
+                    }
+                }
+            }*/
         }
 
-       
+
+        private System.Windows.Point positionJoueur;
+
 
         private void Collisions(Rectangle x)
         {
             rectJoueur = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur), joueur.Width, joueur.Height);
-            if (x.Tag is string && (string)x.Tag == "ennemi" )
+            if (x.Tag is string && (string)x.Tag == "ennemi")
             {
                 rectEnnemi = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
                 //création d’un rectangle joueur pour la détection de collision
@@ -320,7 +304,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                 }
             }
 
-            
+
         }
 
         private void MinuterieDeplacementsEnnemis(Rectangle x)
@@ -330,14 +314,13 @@ namespace JeuDeTir_SAE_1._01_1._02
             {
                 DeplacementsEnnemis(x);
                 minuterieDeplacementsEnnemis = limiteMinuterieDeplacementsEnnemis;
-                
             }
         }
         private void DeplacementsEnnemis(Rectangle x)
         {
             Random rdm = new Random();
             int irdm = rdm.Next(0, 5);
-            if (x.Tag is string && (string)x.Tag == "ennemi" )
+            if (x.Tag is string && (string)x.Tag == "ennemi")
             {
                 switch (irdm)
                 {
@@ -373,6 +356,8 @@ namespace JeuDeTir_SAE_1._01_1._02
                 }
             }
         }
+        
+        
 
         private void SupprimerObjet()
         {
@@ -380,13 +365,10 @@ namespace JeuDeTir_SAE_1._01_1._02
             {
                 monCanvas.Children.Remove(y);
             }
-            
         }
 
         //------------------------------------------------------------------------
         //-------------------------MOUVEMENTS-------------------------------------
-
-        private System.Windows.Point positionJoueur;
 
         private void MouvementJoueur()
         {
