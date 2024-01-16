@@ -113,6 +113,12 @@ namespace JeuDeTir_SAE_1._01_1._02
             minuteur.Start();
         }
 
+        public static readonly DependencyProperty VelocityXProperty =
+            DependencyProperty.RegisterAttached("VelocityX", typeof(double), typeof(MainWindow), new PropertyMetadata(0.0));
+
+        public static readonly DependencyProperty VelocityYProperty =
+            DependencyProperty.RegisterAttached("VelocityY", typeof(double), typeof(MainWindow), new PropertyMetadata(0.0));
+
         private void MoteurDeJeu(object sender, EventArgs e)
         {
             AffichageLabel();
@@ -123,7 +129,8 @@ namespace JeuDeTir_SAE_1._01_1._02
             {
                 DeplacementsBallesJoueur(x);
                 Collisions(x);
-                MinuteurDeplacementsEnnemis(x);
+                MinuterieDeplacementsEnnemis(x);
+                DéplacementMunitions(x);
             }
             SupprimerObjet();
         }
@@ -337,8 +344,82 @@ namespace JeuDeTir_SAE_1._01_1._02
             ennemis.Add(nouvelEnnemi);
         }
 
+        // Creation munitions ennemi
+        private void MunitionsEnnemis(double x, double y, double joueurX, double joueurY)
+        {
+            double directionX = joueurX - x;
+            double directionY = joueurY - y;
+            double norme = Math.Sqrt(directionX * directionX + directionY * directionY);
+
+            // Normalisez la direction pour assurer une vitesse constante
+            directionX /= norme;
+            directionY /= norme;
+
+            Rectangle nouvelleMunitionEnnemi = new Rectangle
+            {
+                Tag = "munitionEnnemi",
+                Height = 40,
+                Width = 15,
+                Fill = Brushes.Yellow,
+                Stroke = Brushes.Black,
+                StrokeThickness = 5
+            };
+
+            Canvas.SetTop(nouvelleMunitionEnnemi, y);
+            Canvas.SetLeft(nouvelleMunitionEnnemi, x);
+
+            // Ajoutez des propriétés au rectangle pour le mouvement
+            nouvelleMunitionEnnemi.SetValue(Canvas.LeftProperty, x);
+            nouvelleMunitionEnnemi.SetValue(Canvas.TopProperty, y);
+            nouvelleMunitionEnnemi.SetValue(VelocityXProperty, directionX * vitesseBallesEnnemis);
+            nouvelleMunitionEnnemi.SetValue(VelocityYProperty, directionY * vitesseBallesEnnemis);
+
+            monCanvas.Children.Add(nouvelleMunitionEnnemi);
+        }
+
+
+        private void DéplacementMunitions(Rectangle x)
+        {
+            if (x is Rectangle && x.Tag is string && (string)x.Tag == "munitionEnnemi")
+            {
+                double velocityX = (double)x.GetValue(VelocityXProperty);
+                double velocityY = (double)x.GetValue(VelocityYProperty);
+
+                Canvas.SetLeft(x, Canvas.GetLeft(x) + velocityX);
+                Canvas.SetTop(x, Canvas.GetTop(x) + velocityY);
+
+                // Vérifier si le tir sort de l'écran et l'ajouter à la liste à supprimer
+                if (Canvas.GetTop(x) > ActualHeight + x.ActualHeight)
+                    supprimerObjet.Add(x);
+            }
+        }
+
+        private void MinuterieDeTirEnnemi()
+        {
+            minuterieTir -= 2;
+
+            if (minuterieTir < 0)
+            {
+                foreach (Rectangle ennemi in ennemisListe.ToList())
+                {
+                    // Assurez-vous que l'ennemi est toujours présent
+                    if (monCanvas.Children.Contains(ennemi))
+                    {
+                        MunitionsEnnemis(Canvas.GetLeft(ennemi), Canvas.GetTop(ennemi), positionJoueur.X, positionJoueur.Y);
+                    }
+                    else
+                    {
+                        // Supprimez l'ennemi de la liste s'il n'est plus présent
+                        ennemisListe.Remove(ennemi);
+                    }
+                }
+
+                minuterieTir = limiteMinuterieTir;
+            }
+        }
+
         //---------------------------------------------------------------------------
-        //-----------------------------TIRS------------------------------------------
+        //-----------------------------TIRS JOUEUR-----------------------------------
 
         private void DeplacementsBallesJoueur(Rectangle x)
         {
@@ -422,7 +503,6 @@ namespace JeuDeTir_SAE_1._01_1._02
                     ReinitialisationJeu();
                 }
             }
-
             if (x is Rectangle && (string)x.Tag == "ballesJoueurs" + direction)
             {
                 Rect rectBalleJoueur = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
@@ -448,16 +528,13 @@ namespace JeuDeTir_SAE_1._01_1._02
             }
         }
 
-        private void MinuteurApparitionsEnnemis()
-        {
-            minuteurApparitionsEnnemis ++;
-            if (minuteurApparitionsEnnemis % 10 == 0)
-            {
-                CreationEnnemis();
-            }
-        }
 
-        private void MinuteurDeplacementsEnnemis(Rectangle x)
+            }
+
+        //-------------------------------------------------------------------------------
+        //-------------------------DEPLACEMENT ENNEMIS-----------------------------------
+
+        private void MinuterieDeplacementsEnnemis(Rectangle x)
         {
             minuteurDeplacementsEnnemis ++;
             if (minuteurDeplacementsEnnemis % 50 == 0)
@@ -473,74 +550,42 @@ namespace JeuDeTir_SAE_1._01_1._02
                 MunitionsEnnemis((Canvas.GetLeft(joueur)) + joueur.Width / 2, 10);
             }
         }
+
+
         private void DeplacementsEnnemis(Rectangle x)
         {
-            int irdm = rdm.Next(0, 5);
-            if ((string)x.Tag == "ennemi")
+            if (x.Tag is string && (string)x.Tag == "ennemi")
             {
-                switch (irdm)
-                {
-                    case 1:
-                        {
-                            // Gauche
-                            if (Canvas.GetLeft(x) > buisson1.Width)
-                            {
-                                angle = -90;
-                                Canvas.SetLeft(x, Canvas.GetLeft(x) - vitesseEnnemi);
-                                x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
-                            }
-                            break;
-                        }
-                    case 2:
-                        {
-                            // Droite
-                            if (Canvas.GetLeft(x) + x.Width < Application.Current.MainWindow.Width - buisson2.Width)
-                            { 
-                            angle = 90;
-                            Canvas.SetLeft(x, Canvas.GetLeft(x) + vitesseEnnemi);
-                            x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
-                            }
-                            break;
-                        }
-                    case 3:
-                        {
-                            // Bas
-                            if (Canvas.GetTop(x) + x.Height < Application.Current.MainWindow.Height - buisson5.Height && Canvas.GetTop(x) + x.Height < Application.Current.MainWindow.Height - buisson6.Height)
-                            angle = 180;
-                            Canvas.SetTop(x, Canvas.GetTop(x) + vitesseEnnemi);
-                            x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
-                            break;
-                        }
-                    case 4:
-                        {
-                            // Haut
-                            if(Canvas.GetTop(x) > buisson3.Height && Canvas.GetTop(x) > buisson4.Height)
-                            { 
-                            angle = 360;
-                            Canvas.SetTop(x, Canvas.GetTop(x) - vitesseEnnemi);
-                            x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
-                            }
-                            break;
-                        }
-                }
-            }
-        }
-        
-        private void DeplacementsTirEnnemis()
-        {
+                double joueurX = Canvas.GetLeft(joueur);
+                double joueurY = Canvas.GetTop(joueur);
 
-        }
+                double ennemiX = Canvas.GetLeft(x);
+                double ennemiY = Canvas.GetTop(x);
 
-        private void SupprimerObjet()
-        {
-            foreach (Rectangle x in supprimerObjet)
-            {
-                monCanvas.Children.Remove(x);
+                double directionX = joueurX - ennemiX;
+                double directionY = joueurY - ennemiY;
+
+                double norme = Math.Sqrt(directionX * directionX + directionY * directionY);
+
+                // Normalisez la direction pour assurer une vitesse constante
+                directionX /= norme;
+                directionY /= norme;
+
+                
+
+                Canvas.SetLeft(x, Canvas.GetLeft(x) + vitesseEnnemi * directionX);
+                Canvas.SetTop(x, Canvas.GetTop(x) + vitesseEnnemi * directionY);
+
+                // Mettez à jour l'angle en fonction de la direction
+                angle = (int)(Math.Atan2(directionY, directionX) * (180 / Math.PI));
+                x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
             }
         }
 
         //------------------------------------------------------------------------
         //-------------------------MOUVEMENTS-------------------------------------
+
+        private System.Windows.Point positionJoueur;
 
         private void MouvementJoueur()
         {
@@ -586,6 +631,8 @@ namespace JeuDeTir_SAE_1._01_1._02
                 joueur.RenderTransform = new RotateTransform(angle, joueur.Width / 2, joueur.Height / 2);
                 joueur.Fill = animationMarcheJoueur[minuteurImagesMarcheJoueur];
             }
+            // Mise à jour de la position du joueur
+            positionJoueur = new System.Windows.Point(Canvas.GetLeft(joueur), Canvas.GetTop(joueur));
         }
 
         //----------------------------------------------------------------------
