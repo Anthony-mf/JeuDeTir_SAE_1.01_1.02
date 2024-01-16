@@ -32,7 +32,7 @@ namespace JeuDeTir_SAE_1._01_1._02
         //vitesse du joueur
         private int vitesseJoueur = 10;
         // vitesse du tir du joueur
-        private int vitesseBallesJoueurs = 10;
+        private int vitesseBallesJoueurs = 8;
         //vitesse balle ennemi
         private int vitesseBallesEnnemis = 10;
         //liste des objets à supprimer
@@ -90,7 +90,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             // rafraissement toutes les 16 milliseconds
             minuterie.Interval = TimeSpan.FromMilliseconds(16);
             minuterie.Start();
-            CreationEnnemis(500);
+            CreationEnnemis(5);
 
         }
 
@@ -107,7 +107,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             foreach (Rectangle x in monCanvas.Children.OfType<Rectangle>())
             {
                 
-                DeplacementsEtCollisionBalleJoueur(x);
+                DeplacementsBallesJoueurs(x);
                 Collisions(x);
                 MinuterieDeplacementsEnnemis(x);
                 DéplacementMunitions(x);
@@ -135,6 +135,14 @@ namespace JeuDeTir_SAE_1._01_1._02
                     break;
                 case 2:
                     break;
+            }
+        }
+
+        private void SupprimerObjet()
+        {
+            foreach (Rectangle y in supprimerObjet)
+            {
+                monCanvas.Children.Remove(y);
             }
         }
 
@@ -227,22 +235,28 @@ namespace JeuDeTir_SAE_1._01_1._02
 
             if (minuterieTir < 0)
             {
-                // Utilisez les coordonnées de l'ennemi pour les munitions ennemies
-                foreach (Rectangle ennemi in ennemisListe)
+                foreach (Rectangle ennemi in ennemisListe.ToList())
                 {
-                    MunitionsEnnemis(Canvas.GetLeft(ennemi), Canvas.GetTop(ennemi), positionJoueur.X, positionJoueur.Y);
+                    // Assurez-vous que l'ennemi est toujours présent
+                    if (monCanvas.Children.Contains(ennemi))
+                    {
+                        MunitionsEnnemis(Canvas.GetLeft(ennemi), Canvas.GetTop(ennemi), positionJoueur.X, positionJoueur.Y);
+                    }
+                    else
+                    {
+                        // Supprimez l'ennemi de la liste s'il n'est plus présent
+                        ennemisListe.Remove(ennemi);
+                    }
                 }
 
                 minuterieTir = limiteMinuterieTir;
             }
         }
 
-
-
         //---------------------------------------------------------------------------
-        //-----------------------------TIRS------------------------------------------
+        //-----------------------------TIRS JOUEUR-----------------------------------
 
-        private void DeplacementsEtCollisionBalleJoueur(Rectangle x)
+        private void DeplacementsBallesJoueurs(Rectangle x)
         {
             if (x is Rectangle && x.Tag is string && (string)x.Tag == "ballesJoueurs_H")
             {
@@ -286,9 +300,8 @@ namespace JeuDeTir_SAE_1._01_1._02
             
         }
 
-
-        private System.Windows.Point positionJoueur;
-
+        //---------------------------------------------------------------------------------
+        //--------------------------COLISIONS----------------------------------------------
 
         private void Collisions(Rectangle x)
         {
@@ -306,18 +319,6 @@ namespace JeuDeTir_SAE_1._01_1._02
                 }
             }
 
-            rectJoueur = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur), joueur.Width, joueur.Height);
-
-            if (x.Tag is string && x is Rectangle && (string)x.Tag == "munitionEnnemi")
-            {
-                Rect munitionEnnemi = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
-
-                if (munitionEnnemi.IntersectsWith(rectJoueur))
-                {
-                    
-                    minuterie.Stop();
-                }
-            }
             foreach (var y in monCanvas.Children.OfType<Rectangle>())
             {
                 rectJoueur = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur), joueur.Width, joueur.Height);
@@ -351,15 +352,19 @@ namespace JeuDeTir_SAE_1._01_1._02
                             // ajoutez également la balle à la liste des objets à supprimer
                             supprimerObjet.Add(y);
                             // incrémente le nombre d'ennemis détruits
-                            ennemisRestants -= 1;
-                            // Ajoutez ici d'autres actions à effectuer en cas de collision, par exemple, augmenter le score.
+
                         }
                     }
                 }
+
+
             }
 
 
         }
+
+        //-------------------------------------------------------------------------------
+        //-------------------------DEPLACEMENT ENNEMIS-----------------------------------
 
         private void MinuterieDeplacementsEnnemis(Rectangle x)
         {
@@ -370,6 +375,8 @@ namespace JeuDeTir_SAE_1._01_1._02
                 minuterieDeplacementsEnnemis = limiteMinuterieDeplacementsEnnemis;
             }
         }
+
+
         private void DeplacementsEnnemis(Rectangle x)
         {
             if (x.Tag is string && (string)x.Tag == "ennemi")
@@ -400,20 +407,10 @@ namespace JeuDeTir_SAE_1._01_1._02
             }
         }
 
-
-
-
-
-        private void SupprimerObjet()
-        {
-            foreach (Rectangle y in supprimerObjet)
-            {
-                monCanvas.Children.Remove(y);
-            }
-        }
-
         //------------------------------------------------------------------------
         //-------------------------MOUVEMENTS-------------------------------------
+
+        private System.Windows.Point positionJoueur;
 
         private void MouvementJoueur()
         {
