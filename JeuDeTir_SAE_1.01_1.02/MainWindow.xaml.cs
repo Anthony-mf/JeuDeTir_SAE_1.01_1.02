@@ -429,6 +429,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                 Width = 20,
                 Fill = munitionsSkin
             };
+
             Canvas.SetTop(nouvelleMunitionEnnemi, y);
             Canvas.SetLeft(nouvelleMunitionEnnemi, x);
             // Ajoutez des propriétés au rectangle pour le mouvement
@@ -497,7 +498,6 @@ namespace JeuDeTir_SAE_1._01_1._02
                 }
             }
         }
-
         private void MinuteurApparitionsEnnemis()
         {
             minuteurApparitionsEnnemis++;
