@@ -24,7 +24,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             InitializeComponent();
             // on affecte le skin du menu rejouer
             ImageBrush fondMenuRejouer = new ImageBrush();
-            fondMenuRejouer.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondMenu.png"));
+            fondMenuRejouer.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/statique/FondMenu.png"));
             canvasMenuRejouer.Background = fondMenuRejouer;
             canvasMenuRejouer.Background.Opacity = 0.5;
         }

@@ -19,17 +19,110 @@
 
   <ItemGroup>
     <None Remove="Arriereplan.jpg" />
+    <None Remove="buisson_coin.png" />
     <None Remove="FondCanvas.jpg" />
     <None Remove="FondMenu.png" />
+    <None Remove="imgCoin.png" />
+    <None Remove="sol.jpg" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="buisson_coin.png" />
     <Resource Include="FondCanvas.jpg" />
     <Resource Include="FondMenu.png" />
+    <Resource Include="imgCoin.png" />
     <Resource Include="logo.png" />
+    <Resource Include="sol.jpg" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche10.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche11.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche12.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche13.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche14.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche15.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche17.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche18.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche19.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche20.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche21.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche5.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche6.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche7.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche8.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Sprite\Tortue\Marche\tortue_marche9.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Statique\buissonNormal.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Statique\buissonTourne.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Statique\escargot_statique.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Statique\FondCanvas.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Statique\FondMenu.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Statique\munitions.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="images\Statique\tortue_statique.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="img\8334151.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -42,6 +135,10 @@
     <None Update="img\_232dcf25-bb75-4b67-8118-819ad263a1b4.jfif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="images\" />
   </ItemGroup>
 
 </Project>

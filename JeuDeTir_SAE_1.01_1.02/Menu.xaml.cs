@@ -19,20 +19,31 @@ namespace JeuDeTir_SAE_1._01_1._02
     /// Logique d'interaction pour Menu.xaml
     /// </summary>
     public partial class Menu : Window
-    { 
-        public bool Rejouer { get; private set; }
+    {
+        public string niveauDifficulte = "Facile";
         public Menu()
         {
             InitializeComponent();
             // on affecte le skin du menu
             ImageBrush fondMenu = new ImageBrush();
-            fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "img/statique/FondMenu.png"));
+            fondMenu.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/statique/FondMenu.png"));
             menuCanvas.Background = fondMenu;
             menuCanvas.Background.Opacity = 0.5;
         }
 
-        public void butJouer_Click(object sender, RoutedEventArgs e)
+        public void butFacile_Click(object sender, RoutedEventArgs e)
         {
+            niveauDifficulte = "Facile";
+            this.DialogResult = true;
+        }
+        public void butMoyen_Click(object sender, RoutedEventArgs e)
+        {
+            niveauDifficulte = "Moyen";
+            this.DialogResult = true;
+        }
+        public void butDifficile_Click(object sender, RoutedEventArgs e)
+        {
+            niveauDifficulte = "Difficile";
             this.DialogResult = true;
         }
         public void butQuitter_Click(object sender, RoutedEventArgs e)
