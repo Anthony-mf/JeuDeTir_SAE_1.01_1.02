@@ -71,10 +71,10 @@
         <Rectangle
             x:Name="rectBas"
             Canvas.Left="136"
-            Canvas.Top="829"
+            Canvas.Top="823"
             Width="728"
             Height="161"
             HorizontalAlignment="Center"
-            VerticalAlignment="Center" />
+            VerticalAlignment="Top" />
     </Canvas>
 </Window>

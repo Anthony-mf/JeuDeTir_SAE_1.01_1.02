@@ -27,12 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="buisson_coin.png" />
-    <Resource Include="FondCanvas.jpg" />
-    <Resource Include="FondMenu.png" />
-    <Resource Include="imgCoin.png" />
     <Resource Include="logo.png" />
-    <Resource Include="sol.jpg" />
   </ItemGroup>
 
   <ItemGroup>

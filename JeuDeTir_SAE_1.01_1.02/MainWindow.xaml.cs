@@ -1,22 +1,13 @@
-﻿using System;
+﻿// Importations
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Media;
-using System.Numerics;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Transactions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
@@ -77,7 +68,6 @@ namespace JeuDeTir_SAE_1._01_1._02
         private string direction;
         // minuteur de tir ennemi
         private int minuteurTir;
-        //
         private int pourcentageMinuteurTir;
         // minuteur images marche joueur
         private int minuteurImagesMarcheJoueur;
@@ -86,9 +76,7 @@ namespace JeuDeTir_SAE_1._01_1._02
         private int pourcentageMinuteurDeplacementsEnnemis;
         // minuteur apparition ennemis
         private int minuteurApparitionsEnnemis;
-
         private int pourcentageMinuteurApparitionsEnnemis;
-
         // angle
         private int angle;
         // menu principal
@@ -111,10 +99,6 @@ namespace JeuDeTir_SAE_1._01_1._02
         private int minuteurTempsPasse;
         // temps passé
         private int tempsPasse;
-        // score le plus haut
-        private int scoreLePlusHaut;
-        // temps le plus haut
-        private int tempsLePlusHaut;
         // random
         Random rdm = new Random();
         // position du joueur
@@ -134,18 +118,12 @@ namespace JeuDeTir_SAE_1._01_1._02
         public MainWindow()
         {
             InitializeComponent();
-            // initialisation des images
             InitialisationImage();
-            // initialisation des audios
             InitialisationAudio();
-            // montrer le menu
             ApparitionMenu(perdu, enPause);
             monCanvas.Focus();
-            // affectation minuteur au moteur de jeu
             minuteur.Tick += MoteurDeJeu;
-            // rafraissement toutes les 16 milliseconds
             minuteur.Interval = TimeSpan.FromMilliseconds(16);
-            // demarrage du minuteur
             minuteur.Start();
         }
 
@@ -155,6 +133,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             MouvementJoueur();
             MinuteurApparitionsEnnemis();
             MinuteurDeTirEnnemi();
+
             foreach (Rectangle x in monCanvas.Children.OfType<Rectangle>())
             {
                 DeplacementsBallesJoueur(x);
@@ -162,6 +141,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                 DeplacementsMunitions(x);
                 MinuteurDeplacementsEnnemis(x);
             }
+
             SupprimerObjet();
         }
 
@@ -216,8 +196,8 @@ namespace JeuDeTir_SAE_1._01_1._02
                     ConfigurationsTouches();
                 }
                 else
-                    this.Close();           
-                }
+                    this.Close();
+            }
             else
             {
                 if (!perdu)
@@ -226,7 +206,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                     menu.ShowDialog();
 
                     if (menu.DialogResult == true)
-                    { 
+                    {
                         menu.Close();
                         AjusterDifficulte();
                     }
@@ -359,7 +339,7 @@ namespace JeuDeTir_SAE_1._01_1._02
             {
                 // gauche
                 case 1:
-                    positionX = Canvas.GetLeft(rectGauche) + rectGauche.Width + nouvelEnnemi.Width;
+                    positionX = Canvas.GetLeft(rectGauche) + rectGauche.Width;
                     positionY = Canvas.GetTop(rectGauche) + rdm.Next((int)(rectGauche.Height - rectHaut.Width), (int)rectGauche.Height);
                     break;
                 // droite
@@ -370,7 +350,7 @@ namespace JeuDeTir_SAE_1._01_1._02
                 // haut
                 case 3:
                     positionX = Canvas.GetLeft(rectGauche) + rdm.Next((int)(rectHaut.Width - rectGauche.Width), (int)rectHaut.Width);
-                    positionY = Canvas.GetTop(rectGauche) + rectEnnemi.Height + nouvelEnnemi.Height;
+                    positionY = Canvas.GetTop(rectGauche) + rectEnnemi.Height;
                     break;
                 // bas
                 case 4:
@@ -383,6 +363,9 @@ namespace JeuDeTir_SAE_1._01_1._02
             Canvas.SetTop(nouvelEnnemi, positionY);
             monCanvas.Children.Add(nouvelEnnemi);
             ennemis.Add(nouvelEnnemi);
+#if DEBUG
+            Console.WriteLine("Nombre d'ennemis : " + ennemis.Count);
+#endif
         }
 
         //---------------------------------------------------------------------------
@@ -390,7 +373,7 @@ namespace JeuDeTir_SAE_1._01_1._02
 
         private void DeplacementsBallesJoueur(Rectangle x)
         {
-            if (x is Rectangle && (string)x.Tag == "ballesJoueursH")
+            if ((string)x.Tag == "ballesJoueursH")
             {
                 Canvas.SetTop(x, Canvas.GetTop(x) - vitesseBallesJoueurs);//monte
                 if (Canvas.GetTop(x) < 0)
@@ -399,27 +382,27 @@ namespace JeuDeTir_SAE_1._01_1._02
                     supprimerObjet.Add(x);
                 }
             }
-            if (x is Rectangle && (string)x.Tag == "ballesJoueursB")
+            if ((string)x.Tag == "ballesJoueursB")
             {
                 Canvas.SetTop(x, Canvas.GetTop(x) + vitesseBallesJoueurs);//descend
-                if (Canvas.GetTop(x) > 800)
+                if (Canvas.GetTop(x) > 1000)
                 {
                     // si c’est le cas on l’ajoute à la liste des éléments à supprimer
                     supprimerObjet.Add(x);
                 }
 
             }
-            if (x is Rectangle && (string)x.Tag == "ballesJoueursD")
+            if ((string)x.Tag == "ballesJoueursD")
             {
                 Canvas.SetLeft(x, Canvas.GetLeft(x) + vitesseBallesJoueurs);//droite
-                if (Canvas.GetLeft(x) > 1600)
+                if (Canvas.GetLeft(x) > 1000)
                 {
                     // si c’est le cas on l’ajoute à la liste des éléments à supprimer
                     supprimerObjet.Add(x);
                 }
 
             }
-            if (x is Rectangle && (string)x.Tag == "ballesJoueursG")
+            if ((string)x.Tag == "ballesJoueursG")
             {
                 Canvas.SetLeft(x, Canvas.GetLeft(x) - vitesseBallesJoueurs);//gauche
                 if (Canvas.GetLeft(x) < 0)
@@ -455,6 +438,9 @@ namespace JeuDeTir_SAE_1._01_1._02
             nouvelleMunitionEnnemi.SetValue(VelocityYProperty, directionY * vitesseBallesEnnemis);
             monCanvas.Children.Add(nouvelleMunitionEnnemi);
             munitionsEnnemi.Add(nouvelleMunitionEnnemi);
+#if DEBUG
+            Console.WriteLine("Nombre de tirs ennemis : " + munitionsEnnemi.Count);
+#endif
         }
 
         private void Collisions(Rectangle x, bool codeTriche)
@@ -495,9 +481,9 @@ namespace JeuDeTir_SAE_1._01_1._02
                 foreach (Rectangle y in monCanvas.Children.OfType<Rectangle>())
                 {
                     if ((string)y.Tag == "ennemi")
-                    { 
-                    // création d’un rectangle correspondant à l’ennemi
-                    Rect rectEnnemi = new Rect(Canvas.GetLeft(y), Canvas.GetTop(y), y.Width, y.Height);
+                    {
+                        // création d’un rectangle correspondant à l’ennemi
+                        Rect rectEnnemi = new Rect(Canvas.GetLeft(y), Canvas.GetTop(y), y.Width, y.Height);
                         // on vérifie la collision
                         // appel à la méthode IntersectsWith pour détecter la collision
                         if (rectBalleJoueur.IntersectsWith(rectEnnemi))
@@ -514,7 +500,7 @@ namespace JeuDeTir_SAE_1._01_1._02
 
         private void MinuteurApparitionsEnnemis()
         {
-            minuteurApparitionsEnnemis ++;
+            minuteurApparitionsEnnemis++;
             if (minuteurApparitionsEnnemis % pourcentageMinuteurApparitionsEnnemis == 0)
             {
                 CreationEnnemis();
@@ -523,7 +509,7 @@ namespace JeuDeTir_SAE_1._01_1._02
 
         private void MinuteurDeplacementsEnnemis(Rectangle x)
         {
-            minuteurDeplacementsEnnemis ++;
+            minuteurDeplacementsEnnemis++;
             if (minuteurDeplacementsEnnemis % pourcentageMinuteurDeplacementsEnnemis == 0)
             {
                 DeplacementsEnnemis(x);
@@ -571,40 +557,45 @@ namespace JeuDeTir_SAE_1._01_1._02
                 x.RenderTransform = new RotateTransform(angle, x.Width / 2, x.Height / 2);
             }
         }
-        
+
         private void DeplacementsMunitions(Rectangle x)
         {
-            if (x is Rectangle && x.Tag is string && (string)x.Tag == "munitionEnnemi")
+            if ((string)x.Tag == "munitionEnnemi")
             {
                 double velocityX = (double)x.GetValue(VelocityXProperty);
                 double velocityY = (double)x.GetValue(VelocityYProperty);
                 Canvas.SetLeft(x, Canvas.GetLeft(x) + velocityX);
                 Canvas.SetTop(x, Canvas.GetTop(x) + velocityY);
-                // Vérifier si le tir sort de l'écran et l'ajouter à la liste à supprimer
-                if (Canvas.GetTop(x) > ActualHeight + x.ActualHeight)
+
+                if (Canvas.GetTop(x) > ActualHeight || Canvas.GetTop(x) < 0 || Canvas.GetLeft(x) > ActualWidth || Canvas.GetLeft(x) < 0)
+                {
                     supprimerObjet.Add(x);
+                    munitionsEnnemi.Remove(x);
+                }
             }
         }
 
         private void SupprimerObjet()
         {
             foreach (Rectangle x in supprimerObjet)
-            {
+            { 
+#if DEBUG
+                Console.WriteLine("Nombre d'objets dans la liste supprimerObjet : " + supprimerObjet.Count);
+#endif
                 monCanvas.Children.Remove(x);
             }
+
+
+            supprimerObjet.Clear();
         }
 
         //------------------------------------------------------------------------
         //-------------------------MOUVEMENTS-------------------------------------
-
         private void MouvementJoueur()
         {
             if (minuteurImagesMarcheJoueur > 20)
-            {
-                minuteurImagesMarcheJoueur = 0;
-            }
-            minuteurImagesMarcheJoueur++;
-            //Gauche
+                minuteurImagesMarcheJoueur++;
+
             if (allerGauche && Canvas.GetLeft(joueur) > rectGauche.Width)
             {
                 direction = "G";
@@ -635,14 +626,13 @@ namespace JeuDeTir_SAE_1._01_1._02
             //Bas
             if (allerBas && Canvas.GetTop(joueur) + joueur.Height < Application.Current.MainWindow.Height - rectBas.Height)
             {
-                direction="B";
+                direction = "B";
                 angle = -180;
                 Canvas.SetTop(joueur, Canvas.GetTop(joueur) + vitesseJoueur);
                 joueur.RenderTransform = new RotateTransform(angle, joueur.Width / 2, joueur.Height / 2);
                 joueur.Fill = animationMarcheJoueur[minuteurImagesMarcheJoueur];
             }
-            // Mise à jour de la position du joueur
-            positionJoueur = new System.Windows.Point(Canvas.GetLeft(joueur), Canvas.GetTop(joueur));
+        positionJoueur = new Point(Canvas.GetLeft(joueur), Canvas.GetTop(joueur));
         }
 
         //----------------------------------------------------------------------
@@ -692,52 +682,46 @@ namespace JeuDeTir_SAE_1._01_1._02
 
         private void CanvasToucheLevées(object sender, KeyEventArgs e)
         {
-            //stop les déplacements si la touche est relevée
             if (e.Key.ToString() == toucheGauche)
-            {
                 allerGauche = false;
-            }
             if (e.Key.ToString() == toucheDroite)
-            {
                 allerDroite = false;
-            }
             if (e.Key.ToString() == toucheHaut)
-            {
                 allerHaut = false;
-            }
             if (e.Key.ToString() == toucheBas)
-            {
                 allerBas = false;
-            }
-            //touche tir
+
             if (e.Key.ToString() == toucheTir)
+                GestionTir();
+        }
+
+        private void GestionTir()
+        {
+            audioFond.Pause();
+            audioTir.Position = TimeSpan.Zero;
+            audioTir.Play();
+            audioFond.Play();
+
+            supprimerObjet.Clear();
+
+            if (direction == "G" || direction == "D" || direction == "H" || direction == "B")
+                CreerNouvelleBalle();
+        }
+
+        private void CreerNouvelleBalle()
+        {
+            Rectangle nouvelleBalle = new Rectangle
             {
-                // mise en pause de la musique de fond
-                audioFond.Pause();
-                // bruit de tir
-                audioTir.Position = TimeSpan.Zero;
-                audioTir.Play();
-                // reprise de la musique de fond
-                audioFond.Play();
-                // on vide la liste des items
-                supprimerObjet.Clear();
-                // création d'un nouveau tir
-                if (direction == "G" || direction == "D" || direction == "H" || direction == "B")
-                {
-                    Rectangle nouvelleBalle = new Rectangle
-                    {
-                        Tag = "ballesJoueurs" + direction,
-                        Height = 20,
-                        Width = 20,
-                        Fill = munitionsSkin
-                    };
-                    // on place le tir à l’endroit du joueur
-                    Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) + joueur.Height / 2 - nouvelleBalle.Height / 2);
-                    Canvas.SetLeft(nouvelleBalle, Canvas.GetLeft(joueur) + joueur.Width / 2);
-                    // on place le tir dans le canvas
-                    monCanvas.Children.Add(nouvelleBalle);
-                }
-            }
+                Tag = "ballesJoueurs" + direction,
+                Height = 20,
+                Width = 20,
+                Fill = munitionsSkin
+            };
+
+            Canvas.SetTop(nouvelleBalle, Canvas.GetTop(joueur) + joueur.Height / 2 - nouvelleBalle.Height / 2);
+            Canvas.SetLeft(nouvelleBalle, Canvas.GetLeft(joueur) + joueur.Width / 2);
+
+            monCanvas.Children.Add(nouvelleBalle);
         }
     }
 }
